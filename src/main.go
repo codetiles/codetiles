@@ -1,27 +1,27 @@
 package main
 
 import (
-  "fmt"
-  "net/http"
-  "log"
+	"fmt"
+	"log"
+	"net/http"
 )
 
 func main() {
-  PORT := "8080"
+	PORT := "8080"
 
-  fmt.Println("Starting codetiles server on port " + PORT)
+	fmt.Println("Starting codetiles server on port " + PORT)
 
-  http.HandleFunc("/", handleRoot)
-  log.Fatal(http.ListenAndServe(":" + PORT, nil))
+	http.HandleFunc("/", handleRoot)
+	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 
 func handleRoot(w http.ResponseWriter, r *http.Request) {
-  // Get path, if it ends in a '/', then we should append "index.html" to it.
-  fileName := r.URL.Path
-  if fileName[len(fileName) - 1] == '/' {
-    fileName += "index.html"
-  }
+	// Get path, if it ends in a '/', then we should append "index.html" to it.
+	fileName := r.URL.Path
+	if fileName[len(fileName)-1] == '/' {
+		fileName += "index.html"
+	}
 
-  http.ServeFile(w, r, "public/" + fileName)
-  return
+	http.ServeFile(w, r, "public/"+fileName)
+	return
 }
