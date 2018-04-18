@@ -14,12 +14,12 @@ type tile struct {
 
 type gameBoard struct {
 	tiles   [30][30]tile
-	players []user
+	players [][8]byte
 	id      [12]byte
 	mu      sync.Mutex
 }
 
-func formMap() gameBoard {
+func formMap(players [][8]byte) gameBoard {
 	// Create a sample tile
 	var emptyTile tile
 	emptyTile.tileType = "empty"
@@ -38,5 +38,6 @@ func formMap() gameBoard {
 
 	var newMap gameBoard
 	newMap.tiles = tiles
+	newMap.players = players
 	return newMap
 }
