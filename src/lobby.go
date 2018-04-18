@@ -33,7 +33,7 @@ func createUser(un string) [8]byte {
 	rb64 := base64.StdEncoding.EncodeToString(randomByteArray[:])
 	fmt.Println(rb64)
 	var randomId [8]byte
-	copy([]byte(rb64), randomId[:])
+	copy(randomId[:], []byte(rb64))
 	newUser.id = randomId
 
 	users[newUser.id] = newUser
