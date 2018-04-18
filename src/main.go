@@ -25,8 +25,8 @@ func main() {
 func handleRoot(w http.ResponseWriter, r *http.Request) {
 	// Get path, if it ends in a '/', then we should append "index.html" to it.
 	filename := r.URL.Path
-	if fileName[len(fileName)-1] == '/' {
-		fileName += "index.html"
+	if filename[len(filename)-1] == '/' {
+		filename += "index.html"
 	}
 
 	http.ServeFile(w, r, "public/"+filename)
