@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-  "sync"
+	"sync"
 )
 
 var lockGameBoards sync.Mutex
@@ -18,7 +18,7 @@ func main() {
 	users = make(map[[6]byte]user)
 
 	http.HandleFunc("/", handleRoot)
-  http.HandleFunc("/api/joinlobby", handleJoiningUser)
+	http.HandleFunc("/api/joinlobby", handleJoiningUser)
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 
