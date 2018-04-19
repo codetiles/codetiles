@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,7 +25,7 @@ type user struct {
 func createUser(un string) [8]byte {
 	var newUser user
 	newUser.name = un
-	newUser.exp = 30
+	newUser.exp = 0
 	newUser.inGame = false
 
 	// Generate a secure random byte array then convert to base64.
@@ -40,8 +41,27 @@ func createUser(un string) [8]byte {
 	return newUser.id
 }
 
-// API call for someone joining a lobby (create a user id)
+type userCreateRequest struct {
+	id string
+}
+
+// API call for someone creating a user (create a user id)
 func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
-	id := createUser("appins")
-	io.WriteString(w, string(id[:]))
+	if r.Method == "POST" {
+
+		id := createUser("")
+
+		idMap := map[string]string{"id": string(id[:])}
+		resJ, err := json.Marshal(idMap)
+		if err != nil {
+			fmt.Println("Error marshalling json!")
+		}
+
+		io.WriteString(w, string(resJ))
+	}
+
+}
+
+func handleUserCheck(w http.ResponseWriter, r *http.Request) {
+
 }

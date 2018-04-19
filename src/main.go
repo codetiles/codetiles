@@ -18,7 +18,7 @@ func main() {
 	queuedPlayers = make(map[[8]byte]bool)
 
 	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/api/joinlobby", handleJoiningUser)
+	http.HandleFunc("/api/v1/createuser", handleJoiningUser)
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 
