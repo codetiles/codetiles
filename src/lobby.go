@@ -37,7 +37,7 @@ func createUser(un string) [8]byte {
 	newUser.id = randomId
 
 	users[newUser.id] = newUser
-  fmt.Println(newUser)
+	fmt.Println(newUser)
 	return newUser.id
 }
 
@@ -47,36 +47,35 @@ type userCreateRequest struct {
 
 // API call for someone creating a user (create a user id)
 func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
-  // We must have a POST request, otherwise send a 422 status code
+	// We must have a POST request, otherwise send a 422 status code
 	if r.Method == "POST" {
-    var usernameMap map[string]string
-    err := json.NewDecoder(r.Body).Decode(&usernameMap)
-    // User error encoding json
-    if err != nil {
-      fmt.Println("Err unmarshalling json!")
-      w.WriteHeader(400)
-      io.WriteString(w, "Unable to unmarshal data (user -> server)")
-      return
-    }
+		var usernameMap map[string]string
+		err := json.NewDecoder(r.Body).Decode(&usernameMap)
+		// User error encoding json
+		if err != nil {
+			fmt.Println("Err unmarshalling json!")
+			w.WriteHeader(400)
+			io.WriteString(w, "Unable to unmarshal data (user -> server)")
+			return
+		}
 
 		id := createUser(usernameMap["DisplayName"])
 
 		idMap := map[string]string{"id": string(id[:])}
 		resJ, err := json.Marshal(idMap)
-    // Server error encoding id
+		// Server error encoding id
 		if err != nil {
 			fmt.Println("Err marshalling json!")
-      w.WriteHeader(http.StatusInternalServerError)
-      io.WriteString(w, "Unable to create marshal json (server -> user)")
-      return
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, "Unable to create marshal json (server -> user)")
+			return
 		}
 
 		io.WriteString(w, string(resJ))
-    return
+		return
 	}
 
-  io.WriteString(w, "")
-
+	io.WriteString(w, "")
 
 }
 
