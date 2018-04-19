@@ -20,6 +20,10 @@
         <div class="slogan">
           Write code. Capture enemy factories.
         </div>
+        <form onSubmit="handleDisplayNameForm();">
+          <input type="text" value="username" id="displayname"></input>
+          <button type="submit">Play</button>
+        </form>
       </div>
       <div class="footer">
         Developed by <a href="https://appins.github.io/">@appins</a>, <a href="http://www.yev.sh/">@yevbar</a>, and <a href="http://www.zane.sh/">@zanedb</a>
@@ -28,5 +32,7 @@
 
     <!-- js tags (in body for faster loading) -->
     <script src="js/main.js" charset="utf-8"></script>
+    <script src="js/js.cookie.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
   </body>
 </html>
