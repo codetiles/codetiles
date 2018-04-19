@@ -19,6 +19,7 @@ func main() {
 
 	http.HandleFunc("/", handleRoot)
 	http.HandleFunc("/api/v1/createuser", handleJoiningUser)
+	http.HandleFunc("/api/v1/verifyuser", handleCheckUser)
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 
