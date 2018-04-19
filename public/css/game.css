@@ -1,0 +1,7 @@
+#board {
+  overflow: auto;
+}
+
+table, tr, td {
+  border: 1px solid black;
+}
