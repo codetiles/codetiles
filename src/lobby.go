@@ -8,14 +8,17 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"strings"
 )
 
+var usersArrayLock sync.Mutex
 var users map[[8]byte]user
+
+var queuedPlayersLock sync.Mutex
 var queuedPlayers map[[8]byte]bool
 
 // A player (deleted after 30 seconds of inactivity)
 type user struct {
-	mu     sync.Mutex
 	id     [8]byte
 	name   string
 	inGame bool
@@ -36,13 +39,13 @@ func createUser(un string) [8]byte {
 	copy(randomId[:], []byte(rb64))
 	newUser.id = randomId
 
+	// Add to users array
+	usersArrayLock.Lock()
 	users[newUser.id] = newUser
+	usersArrayLock.Unlock()
+
 	fmt.Println(newUser)
 	return newUser.id
-}
-
-type userCreateRequest struct {
-	id string
 }
 
 // API call for someone creating a user (create a user id)
@@ -54,14 +57,16 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 		// User error encoding json
 		if err != nil {
 			fmt.Println("Err unmarshalling json!")
-			w.WriteHeader(400)
+			w.WriteHeader(http.StatusNotAcceptable)
 			io.WriteString(w, "Unable to unmarshal data (user -> server)")
 			return
 		}
 
 		id := createUser(usernameMap["DisplayName"])
 
-		idMap := map[string]string{"id": string(id[:])}
+		idMap := map[string]string{
+			"Id" : string(id[:]),
+		}
 		resJ, err := json.Marshal(idMap)
 		// Server error encoding id
 		if err != nil {
@@ -75,10 +80,48 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	io.WriteString(w, "")
+  w.WriteHeader(422)
+	io.WriteString(w, "Wrong type of request")
 
 }
 
-func handleCheckUser(w http.ResponseWriter, r *http.Request) {
+// Verify that a user exists and send the name as a result
+func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
+  path := r.URL.Path
+
+	// Get everything after the forth backslash
+  idstring := strings.Join(strings.Split(path, "/")[4:], "/")
+
+	// Copy the user id and look it up in the users array
+	var userid [8]byte
+	copy(userid[:], []byte(idstring))
+	usersArrayLock.Lock()
+  user, exists := users[userid]
+	usersArrayLock.Unlock()
+
+  if exists {
+    j, err := json.Marshal(map[string]string{
+      "DisplayName" : user.name,
+      "Exists" : "true",
+    })
+
+    if err != nil {
+      fmt.Println("Error marshalling json (server -> client)")
+      w.WriteHeader(http.StatusInternalServerError)
+      io.WriteString(w, "Error marshalling json")
+      return
+    }
+
+
+    io.WriteString(w, string(j))
+    return
+  }
+
+  j, _ := json.Marshal(map[string]string{
+		"DisplayName" : "err",
+		"Exists" : "false",
+	})
+
+	io.WriteString(w, string(j))
 
 }
