@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"sync"
 	"strings"
+	"sync"
 )
 
 var usersArrayLock sync.Mutex
@@ -65,7 +65,7 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 		id := createUser(usernameMap["DisplayName"])
 
 		idMap := map[string]string{
-			"Id" : string(id[:]),
+			"Id": string(id[:]),
 		}
 		resJ, err := json.Marshal(idMap)
 		// Server error encoding id
@@ -80,46 +80,45 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-  w.WriteHeader(422)
+	w.WriteHeader(422)
 	io.WriteString(w, "Wrong type of request")
 
 }
 
 // Verify that a user exists and send the name as a result
 func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
-  path := r.URL.Path
+	path := r.URL.Path
 
 	// Get everything after the forth backslash
-  idstring := strings.Join(strings.Split(path, "/")[4:], "/")
+	idstring := strings.Join(strings.Split(path, "/")[4:], "/")
 
 	// Copy the user id and look it up in the users array
 	var userid [8]byte
 	copy(userid[:], []byte(idstring))
 	usersArrayLock.Lock()
-  user, exists := users[userid]
+	user, exists := users[userid]
 	usersArrayLock.Unlock()
 
-  if exists {
-    j, err := json.Marshal(map[string]string{
-      "DisplayName" : user.name,
-      "Exists" : "true",
-    })
+	if exists {
+		j, err := json.Marshal(map[string]string{
+			"DisplayName": user.name,
+			"Exists":      "true",
+		})
 
-    if err != nil {
-      fmt.Println("Error marshalling json (server -> client)")
-      w.WriteHeader(http.StatusInternalServerError)
-      io.WriteString(w, "Error marshalling json")
-      return
-    }
+		if err != nil {
+			fmt.Println("Error marshalling json (server -> client)")
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, "Error marshalling json")
+			return
+		}
 
+		io.WriteString(w, string(j))
+		return
+	}
 
-    io.WriteString(w, string(j))
-    return
-  }
-
-  j, _ := json.Marshal(map[string]string{
-		"DisplayName" : "err",
-		"Exists" : "false",
+	j, _ := json.Marshal(map[string]string{
+		"DisplayName": "err",
+		"Exists":      "false",
 	})
 
 	io.WriteString(w, string(j))
