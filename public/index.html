@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <title>codetiles</title>
   </head>
-  <body>
+  <body onload="onLoad();">
     <div class="container">
       <div class="code">
         <textarea id="code_textarea" rows="20" cols="50">// nothing here yet</textarea>
@@ -18,7 +18,7 @@
         <div class="slogan">
           Write code. Capture enemy factories.
         </div>
-        <form onSubmit="handleDisplayNameForm();">
+        <form onSubmit="handleDisplayNameForm();" id="login_widget">
           <input type="text" value="username" id="displayname"></input>
           <button type="submit">Play</button>
         </form>
