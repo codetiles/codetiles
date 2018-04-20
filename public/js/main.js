@@ -20,10 +20,15 @@ function cookie(name) {
   }
 }
 
-function handleDisplayNameForm() {
+// register user/re-authenticate user on submission of display name
+function handleDisplayNameSubmission() {
   let submitted_displayname = document.getElementById('displayname').value;
-
-
+  if(isRegistered) {
+    document.getElementById('login_widget').style.display = 'none';
+    auth();
+  } else if(!isRegistered) {
+    register();
+  }
 }
 
 function register() {
