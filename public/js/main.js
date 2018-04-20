@@ -1,22 +1,21 @@
 let isRegistered;
 
 function onLoad() {
-  if(cookie('user_id') != null) {
-    let user_id = cookie('user_id');
+  let parsedCookie = {};
+  for(let i = 0;;i++){
+    let part = document.cookie.split("; ")[i].split("=");
+    if (part == "") break;
+    parsedCookie[part[0]] = part[1];
+  }
+
+  if(parsedCookie.user_id != null) {
+    let user_id = parsedCookie.user_id;
     document.getElementById('login_widget').style.display = 'none';
     isRegistered = true;
     auth();
   } else {
     isRegistered = false;
     document.getElementById('login_widget').style.display = 'inline';
-  }
-}
-
-function cookie(name) {
-  if(Cookies.get(name) == null) {
-    return null;
-  } else {
-    return Cookies.get(name);
   }
 }
 
