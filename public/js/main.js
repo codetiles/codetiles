@@ -26,14 +26,21 @@ function handleDisplayNameSubmission() {
     document.getElementById('login_widget').style.display = 'none';
     auth();
   } else if(!isRegistered) {
-    register();
+    register(submitted_displayname);
   }
 }
 
-function register() {
-  // intended for first time use, when displayname is set for the first time
+// intended for first time use, when displayname is set for the first time
+function register(displayname) {
+  let data = `{"DisplayName":"`+displayname+`"}`
+  $.post("api/v1/createuser", data, function(data) {
+    console.log(data);
+  })
 }
 
+// intended for returning visitors, to authenticate (check if ID is valid)
 function auth() {
-  // intended for returning visitors, to authenticate (check if ID is valid)
+  $.getJSON("api/v1/verifyuser/"+user_id, function(data) {
+    // do something with response
+  })
 }
