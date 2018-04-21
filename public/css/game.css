@@ -1,7 +1,28 @@
-body {
+body, html {
   background-color: #e9f1f7;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
+
+td {
+  background-color: #272d2d;
+  height: 3vw;
+  width: 3vw;
+  color: #e9f1f7;
+}
+
+tr {
+  width: 2vw;
+}
+
+#content {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*
 table, tr, td {
   border: 1px solid black;
