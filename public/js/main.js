@@ -1,15 +1,10 @@
 let isRegistered;
 
 function onLoad() {
-  let parsedCookie = {};
-  for(let i = 0;;i++){
-    let part = document.cookie.split("; ")[i].split("=");
-    if (part == "") break;
-    parsedCookie[part[0]] = part[1];
-  }
+  // check if localStorage isn't supported
+  if(!window.localStorage){window.location.href = '/unsupported.html';}
 
-  if(parsedCookie.user_id != null) {
-    let user_id = parsedCookie.user_id;
+  if(localStorage.getItem('user_id') != null) {
     document.getElementById('login_widget').style.display = 'none';
     isRegistered = true;
     auth();
@@ -22,11 +17,11 @@ function onLoad() {
 // register user/re-authenticate user on submission of display name
 function handleDisplayNameSubmission() {
   let submitted_displayname = document.getElementById('displayname').value;
-  if(isRegistered) {
+  if(!isRegistered) {
+    register(submitted_displayname);
+  } else if(isRegistered) {
     document.getElementById('login_widget').style.display = 'none';
     auth();
-  } else if(!isRegistered) {
-    register(submitted_displayname);
   }
 }
 
@@ -34,13 +29,15 @@ function handleDisplayNameSubmission() {
 function register(displayname) {
   let data = `{"DisplayName":"`+displayname+`"}`
   $.post("api/v1/createuser", data, function(data) {
-    console.log(data);
+    let response = JSON.parse(data);
+    localStorage.setItem('user_id', response.Id);
+    document.getElementById('login_widget').style.display = 'none';
   })
 }
 
 // intended for returning visitors, to authenticate (check if ID is valid)
 function auth() {
-  $.getJSON("api/v1/verifyuser/"+user_id, function(data) {
+  $.getJSON("api/v1/verifyuser/"+localStorage.getItem('user_id'), function(data) {
     // do something with response
   })
 }
