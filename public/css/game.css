@@ -9,6 +9,7 @@ td {
   height: 3vw;
   width: 3vw;
   color: #e9f1f7;
+  text-align: center;
 }
 
 tr {
@@ -28,3 +29,15 @@ table, tr, td {
   border: 1px solid black;
 }
 */
+
+.blue {
+  background-color: #404e7c;
+}
+
+.red {
+  background-color: #805e73;
+}
+
+.yellow {
+  background-color: #bfb26d;
+}
