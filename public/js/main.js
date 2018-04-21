@@ -34,6 +34,7 @@ function register(displayname) {
     let response = JSON.parse(data);
     localStorage.setItem('user_id', response.Id);
     document.getElementById('login_widget').style.display = 'none';
+    document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname+', <a href="#" onclick="logout();">logout</a>');
   })
 }
 
@@ -46,7 +47,14 @@ function auth() {
     } else if(data.Exists === "true") {
       user_id = localStorage.getItem('user_id');
       displayname = data.DisplayName;
-      document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname);
+      document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname+', <a href="" onclick="logout();">logout</a>');
     }
   })
+}
+
+function logout() {
+  localStorage.removeItem('user_id');
+  user_id = null;
+  displayname = null;
+  location.reload();
 }
