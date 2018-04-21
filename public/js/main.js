@@ -1,4 +1,6 @@
 let isRegistered;
+let user_id;
+let displayname;
 
 function onLoad() {
   // check if localStorage isn't supported
@@ -38,6 +40,13 @@ function register(displayname) {
 // intended for returning visitors, to authenticate (check if ID is valid)
 function auth() {
   $.getJSON("api/v1/verifyuser/"+localStorage.getItem('user_id'), function(data) {
-    // do something with response
+    if(data.Exists === "false") {
+      localStorage.removeItem('user_id');
+      document.getElementById('login_widget').style.display = 'inline';
+    } else if(data.Exists === "true") {
+      user_id = localStorage.getItem('user_id');
+      displayname = data.DisplayName;
+      document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname);
+    }
   })
 }
