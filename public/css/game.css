@@ -1,7 +1,9 @@
-#board {
-  overflow: auto;
+body {
+  background-color: #e9f1f7;
+  overflow: hidden;
 }
-
+/*
 table, tr, td {
   border: 1px solid black;
 }
+*/
