@@ -4,11 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
 )
-
-var lockGameBoards sync.Mutex
-var games []gameBoard
 
 func main() {
 	PORT := "8080"
@@ -20,6 +16,7 @@ func main() {
 	http.HandleFunc("/", handleRoot)
 	http.HandleFunc("/api/v1/createuser", handleJoiningUser)
 	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)
+	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers)
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 

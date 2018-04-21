@@ -44,7 +44,6 @@ func createUser(un string) [8]byte {
 	users[newUser.id] = newUser
 	usersArrayLock.Unlock()
 
-	fmt.Println(newUser)
 	return newUser.id
 }
 
@@ -72,7 +71,7 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("Err marshalling json!")
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "Unable to create marshal json (server -> user)")
+			io.WriteString(w, "Unable to marshal ID (server -> user)")
 			return
 		}
 

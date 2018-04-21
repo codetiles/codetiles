@@ -4,6 +4,9 @@ import (
 	"sync"
 )
 
+var lockGameBoards sync.Mutex
+var games []gameBoard
+
 type tile struct {
 	tileType string
 	value    int
@@ -16,7 +19,6 @@ type gameBoard struct {
 	tiles   [30][30]tile
 	players [][8]byte
 	id      [12]byte
-	mu      sync.Mutex
 }
 
 func formMap(players [][8]byte) gameBoard {
