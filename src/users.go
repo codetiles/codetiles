@@ -11,10 +11,10 @@ import (
 	"sync"
 )
 
-var usersArrayLock sync.Mutex
+var usersArrayLock sync.RWMutex
 var users map[[8]byte]user
 
-var queuedPlayersLock sync.Mutex
+var queuedPlayersLock sync.RWMutex
 var queuedPlayers map[[8]byte]bool
 
 // A player (deleted after 30 seconds of inactivity)
@@ -94,9 +94,9 @@ func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
 	// Copy the user id and look it up in the users array
 	var userid [8]byte
 	copy(userid[:], []byte(idstring))
-	usersArrayLock.Lock()
+	usersArrayLock.RLock()
 	user, exists := users[userid]
-	usersArrayLock.Unlock()
+	usersArrayLock.RUnlock()
 
 	if exists {
 		j, err := json.Marshal(map[string]string{

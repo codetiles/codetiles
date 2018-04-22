@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-var lockGameBoards sync.Mutex
+var lockGameBoards sync.RWMutex
 var games []gameBoard
 
 type tile struct {

@@ -19,9 +19,9 @@ func handleRetrievePlayers(w http.ResponseWriter, r *http.Request) {
 	var userId [8]byte
 	copy(userId[:], []byte(id))
 
-	usersArrayLock.Lock()
+	usersArrayLock.RLock()
 	_, exists := users[userId]
-	usersArrayLock.Unlock()
+	usersArrayLock.RUnlock()
 
 	if !exists {
 		j, err := json.Marshal(returnPlayers{
@@ -44,9 +44,9 @@ func handleRetrievePlayers(w http.ResponseWriter, r *http.Request) {
 		var returnPlayers returnPlayers
 		returnPlayers.UserExists = true
 
-		usersArrayLock.Lock()
+		usersArrayLock.RLock()
 		returnPlayers.InGame = users[userId].inGame
-		usersArrayLock.Unlock()
+		usersArrayLock.RUnlock()
 
 		if returnPlayers.InGame == true {
 			// TODO: Read from maps
