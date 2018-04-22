@@ -26,6 +26,13 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	if filename[len(filename)-1] == '/' {
 		filename += "index.html"
 	}
+	// remove need to append .html to URL
+	if filename == "/game" {
+		filename += ".html"
+	}
+	if filename == "/unsupported" {
+		filename += ".html"
+	}
 
 	http.ServeFile(w, r, "public/"+filename)
 	return
