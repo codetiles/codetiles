@@ -4,7 +4,7 @@ let displayname;
 
 function onLoad() {
   // check if localStorage isn't supported
-  if(!window.localStorage){window.location.href = '/unsupported.html';}
+  if(!window.localStorage) window.location.href = '/unsupported';
 
   if(localStorage.getItem('user_id') != null) {
     document.getElementById('login_widget').style.display = 'none';
