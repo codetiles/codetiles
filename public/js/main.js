@@ -36,7 +36,7 @@ function register(displayname) {
     let response = JSON.parse(data);
     localStorage.setItem('user_id', response.Id);
     $('#login_widget').hide();
-    $("#logged_in_text").text(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
+    $("#logged_in_text").html(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
   })
 }
 
@@ -49,7 +49,7 @@ function auth() {
     } else {
       user_id = localStorage.getItem('user_id');
       displayname = encodeURIComponent(data.DisplayName);
-      $("#logged_in_text").text(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
+      $("#logged_in_text").html(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
     }
   })
 }
