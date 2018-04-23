@@ -23,6 +23,7 @@ type user struct {
 	name   string
 	inGame bool
 	exp    int
+	code   string
 }
 
 func createUser(un string) [8]byte {

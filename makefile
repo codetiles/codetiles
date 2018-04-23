@@ -8,4 +8,4 @@ build:
 	echo "Executable built in bin/codetiles. Run with ./bin/codetiles"
 windows:
 	@echo Starting codetiles server
-	go run src/main.go src/map.go src/game.go src/users.go src/lobby.go
+	go run src/main.go src/map.go src/game.go src/users.go src/lobby.go src/code.go
