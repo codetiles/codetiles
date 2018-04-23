@@ -2,6 +2,8 @@ let isRegistered;
 let user_id;
 let displayname;
 
+onLoad();
+
 function onLoad() {
   // check if localStorage isn't supported
   if(!window.localStorage) window.location.href = '/unsupported';
@@ -18,7 +20,7 @@ function onLoad() {
 
 // register user/re-authenticate user on submission of display name
 function handleDisplayNameSubmission() {
-  let submitted_displayname = document.getElementById('displayname').value;
+  let submitted_displayname = $('#displayname').text();
   if(!isRegistered) {
     register(submitted_displayname);
   } else if(isRegistered) {
@@ -34,7 +36,7 @@ function register(displayname) {
     let response = JSON.parse(data);
     localStorage.setItem('user_id', response.Id);
     $('#login_widget').hide();
-    $("#logged_in_text").text("Logged in as " + displayname + ", <a href="" onclick="logout();">logout</a>");
+    $("#logged_in_text").text(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
   })
 }
 
@@ -47,7 +49,7 @@ function auth() {
     } else {
       user_id = localStorage.getItem('user_id');
       displayname = encodeURIComponent(data.DisplayName);
-      $("#logged_in_text").text("Logged in as " + displayname + ", <a href="" onclick="logout();">logout</a>");
+      $("#logged_in_text").text(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
     }
   })
 }
