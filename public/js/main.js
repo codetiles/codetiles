@@ -41,10 +41,9 @@ function register(displayname) {
 // intended for returning visitors, to authenticate (check if ID is valid)
 function auth() {
   $.getJSON("api/v1/verifyuser/"+localStorage.getItem('user_id'), function(data) {
-    if(data.Exists == false) {
+    if(data.Exists == "false") {
       localStorage.removeItem('user_id');
       document.getElementById('login_widget').style.display = 'inline';
-      console.log("test")
     } else {
       user_id = localStorage.getItem('user_id');
       displayname = encodeURIComponent(data.DisplayName);
