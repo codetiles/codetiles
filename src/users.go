@@ -15,7 +15,7 @@ var usersArrayLock sync.RWMutex
 var users map[[8]byte]user
 
 var queuedPlayersLock sync.RWMutex
-var queuedPlayers map[[8]byte]bool
+var queuedPlayers [][8]byte
 
 // A player (deleted after 30 seconds of inactivity)
 type user struct {
