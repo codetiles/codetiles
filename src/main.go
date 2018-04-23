@@ -14,26 +14,27 @@ func main() {
 	queuedPlayers = make(map[[8]byte]bool)
 
 	http.HandleFunc("/", handleRoot)
+
+	// API endpoints
 	http.HandleFunc("/api/v1/createuser", handleJoiningUser)
 	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)
 	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers)
+
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 
 func handleRoot(w http.ResponseWriter, r *http.Request) {
-	// Get path, if it ends in a '/', then we should append "index.html" to it.
+	// Get path, make changes if needed
 	filename := r.URL.Path
+
 	if filename[len(filename)-1] == '/' {
 		filename += "index.html"
 	}
 	// remove need to append .html to URL
-	if filename == "/game" {
+	if filename == "/game" || filename == "/unsupported" {
 		filename += ".html"
 	}
-	if filename == "/unsupported" {
-		filename += ".html"
-	}
-
+	
 	http.ServeFile(w, r, "public/"+filename)
 	return
 }
