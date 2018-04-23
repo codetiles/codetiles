@@ -7,22 +7,22 @@ function onLoad() {
   if(!window.localStorage) window.location.href = '/unsupported';
 
   if(localStorage.getItem('user_id') != null) {
-    document.getElementById('login_widget').style.display = 'none';
+    $('#login_widget').hide();
     isRegistered = true;
     auth();
   } else {
     isRegistered = false;
-    document.getElementById('login_widget').style.display = 'inline';
+    $('#login_widget').show();
   }
 }
 
 // register user/re-authenticate user on submission of display name
 function handleDisplayNameSubmission() {
-  let submitted_displayname = encodeURIComponent(document.getElementById('displayname').value);
+  let submitted_displayname = document.getElementById('displayname').value;
   if(!isRegistered) {
     register(submitted_displayname);
   } else if(isRegistered) {
-    document.getElementById('login_widget').style.display = 'none';
+    $('#login_widget').hide();
     auth();
   }
 }
@@ -33,8 +33,8 @@ function register(displayname) {
   $.post("api/v1/createuser", data, function(data) {
     let response = JSON.parse(data);
     localStorage.setItem('user_id', response.Id);
-    document.getElementById('login_widget').style.display = 'none';
-    document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname+', <a href="#" onclick="logout();">logout</a>');
+    $('#login_widget').hide();
+    $("#logged_in_text").text("Logged in as " + displayname + ", <a href="" onclick="logout();">logout</a>");
   })
 }
 
@@ -43,11 +43,11 @@ function auth() {
   $.getJSON("api/v1/verifyuser/"+localStorage.getItem('user_id'), function(data) {
     if(data.Exists == "false") {
       localStorage.removeItem('user_id');
-      document.getElementById('login_widget').style.display = 'inline';
+      $('#login_widget').show();
     } else {
       user_id = localStorage.getItem('user_id');
       displayname = encodeURIComponent(data.DisplayName);
-      document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname+', <a href="" onclick="logout();">logout</a>');
+      $("#logged_in_text").text("Logged in as " + displayname + ", <a href="" onclick="logout();">logout</a>");
     }
   })
 }
