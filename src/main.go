@@ -16,7 +16,7 @@ func main() {
 
 	// API endpoints
 	http.HandleFunc("/api/v1/createuser", handleJoiningUser)
-	http.HandleFunc("/api/v1/verifyuser", handleVerifyUser)
+	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)
 	http.HandleFunc("/api/v1/findgame", handleJoinLobby)
 	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers)
 

@@ -6,7 +6,7 @@ function onLoad() {
   // check if localStorage isn't supported
   if(!window.localStorage) window.location.href = '/unsupported';
 
-  if(encodeURIComponent(localStorage.getItem('user_id')) != null) {
+  if(localStorage.getItem('user_id') != null) {
     document.getElementById('login_widget').style.display = 'none';
     isRegistered = true;
     auth();
@@ -40,12 +40,13 @@ function register(displayname) {
 
 // intended for returning visitors, to authenticate (check if ID is valid)
 function auth() {
-  $.getJSON("api/v1/verifyuser/"+encodeURIComponent(localStorage.getItem('user_id')), function(data) {
-    if(data.Exists === "false") {
+  $.getJSON("api/v1/verifyuser/"+localStorage.getItem('user_id'), function(data) {
+    if(data.Exists == false) {
       localStorage.removeItem('user_id');
       document.getElementById('login_widget').style.display = 'inline';
-    } else if(data.Exists === "true") {
-      user_id = encodeURIComponent(localStorage.getItem('user_id'));
+      console.log("test")
+    } else {
+      user_id = localStorage.getItem('user_id');
       displayname = encodeURIComponent(data.DisplayName);
       document.getElementById('logged_in_text').innerHTML = ('Logged in as '+displayname+', <a href="" onclick="logout();">logout</a>');
     }
