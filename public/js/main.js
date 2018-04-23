@@ -2,9 +2,9 @@ let isRegistered;
 let user_id;
 let displayname;
 
-onLoad();
 
-function onLoad() {
+
+$(function() {
   // check if localStorage isn't supported
   if(!window.localStorage) window.location.href = '/unsupported';
 
@@ -16,7 +16,7 @@ function onLoad() {
     isRegistered = false;
     $('#login_widget').show();
   }
-}
+});
 
 // register user/re-authenticate user on submission of display name
 function handleDisplayNameSubmission() {
