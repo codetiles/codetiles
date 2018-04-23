@@ -20,7 +20,7 @@ function onLoad() {
 
 // register user/re-authenticate user on submission of display name
 function handleDisplayNameSubmission() {
-  let submitted_displayname = $('#displayname').text();
+  let submitted_displayname = $('#displayname').val();
   if(!isRegistered) {
     register(submitted_displayname);
   } else if(isRegistered) {
@@ -48,7 +48,7 @@ function auth() {
       $('#login_widget').show();
     } else {
       user_id = localStorage.getItem('user_id');
-      displayname = encodeURIComponent(data.DisplayName);
+      displayname = data.DisplayName;
       $("#logged_in_text").html(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a>`);
     }
   })
