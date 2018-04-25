@@ -55,8 +55,8 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 		err := json.NewDecoder(r.Body).Decode(&usernameMap)
 
 		if handleJsonUnmarshalError(w, r, "code.go - upload", err) {
-	    return
-	  }
+			return
+		}
 
 		id := createUser(usernameMap["DisplayName"])
 

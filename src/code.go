@@ -14,8 +14,8 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&userJson)
 
 	if handleJsonUnmarshalError(w, r, "code.go - upload", err) {
-    return
-  }
+		return
+	}
 
 	// Process id and code
 	id, existsId := userJson["id"]
@@ -28,9 +28,9 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 			"Reason":  "JSON is missing essential key value.",
 		})
 
-    if handleJsonMarshalError(w, r, "code.go - missing vals", err) {
-      return
-    }
+		if handleJsonMarshalError(w, r, "code.go - missing vals", err) {
+			return
+		}
 
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, string(rj))
@@ -49,9 +49,9 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 			"Reason":  errstr,
 		})
 
-    if handleJsonMarshalError(w, r, "code.go - err'd code", err) {
-      return
-    }
+		if handleJsonMarshalError(w, r, "code.go - err'd code", err) {
+			return
+		}
 
 		io.WriteString(w, string(rj))
 		return
@@ -85,9 +85,9 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 		"Reason":  "",
 	})
 
-  if handleJsonMarshalError(w, r, "code.go - userid", err) {
-    return
-  }
+	if handleJsonMarshalError(w, r, "code.go - userid", err) {
+		return
+	}
 
 	io.WriteString(w, string(rj))
 }
