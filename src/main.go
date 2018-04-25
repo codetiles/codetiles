@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
-	"io"
 )
 
 func main() {
@@ -17,11 +17,11 @@ func main() {
 
 	// API endpoints:
 	http.HandleFunc("/api/v1", handleGetVersion)
-	http.HandleFunc("/api/v1/createuser", handleJoiningUser) // users.go
-	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser) // users.go
-	http.HandleFunc("/api/v1/uploadcode", handleUploadCode) // code.go
-	http.HandleFunc("/api/v1/findgame", handleJoinLobby) // lobby.go
-	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers)  // game.go
+	http.HandleFunc("/api/v1/createuser", handleJoiningUser)       // users.go
+	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)       // users.go
+	http.HandleFunc("/api/v1/uploadcode", handleUploadCode)        // code.go
+	http.HandleFunc("/api/v1/findgame", handleJoinLobby)           // lobby.go
+	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers) // game.go
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }

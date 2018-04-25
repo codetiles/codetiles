@@ -1,10 +1,10 @@
 package main
 
 import (
-	"net/http"
 	"encoding/json"
-	"io"
 	"fmt"
+	"io"
+	"net/http"
 )
 
 // Handle a user joining a lobby
@@ -31,8 +31,8 @@ func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
 
 	if !ex {
 		j, err := json.Marshal(map[string]bool{
-			"Success" : false,
-			"IdExists" : false,
+			"Success":  false,
+			"IdExists": false,
 		})
 
 		if handleJsonMarshalError(w, r, "lobby.go - joinlobby/user does not exist", err) {
