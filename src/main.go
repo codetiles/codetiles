@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"io"
 )
 
 func main() {
@@ -14,12 +15,13 @@ func main() {
 
 	http.HandleFunc("/", handleRoot)
 
-	// API endpoints
-	http.HandleFunc("/api/v1/createuser", handleJoiningUser)
-	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)
-	http.HandleFunc("/api/v1/uploadcode", handleUploadCode)
-	http.HandleFunc("/api/v1/findgame", handleJoinLobby)
-	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers)
+	// API endpoints:
+	http.HandleFunc("/api/v1", handleGetVersion)
+	http.HandleFunc("/api/v1/createuser", handleJoiningUser) // users.go
+	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser) // users.go
+	http.HandleFunc("/api/v1/uploadcode", handleUploadCode) // code.go
+	http.HandleFunc("/api/v1/findgame", handleJoinLobby) // lobby.go
+	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers)  // game.go
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
@@ -37,5 +39,8 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.ServeFile(w, r, "public/"+filename)
-	return
+}
+
+func handleGetVersion(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "API Version 0.1 Pre-alpha")
 }

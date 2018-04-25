@@ -45,7 +45,7 @@ func handleRetrievePlayers(w http.ResponseWriter, r *http.Request) {
 		returnPlayers.InGame = users[userId].inGame
 		usersArrayLock.RUnlock()
 
-		if returnPlayers.InGame == true {
+		if returnPlayers.InGame {
 			// TODO: Read from maps
 			returnPlayers.Players = []string{"appins", "zane", "yev"}
 			return

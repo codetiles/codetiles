@@ -90,7 +90,7 @@ func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
 	copy(userid[:], []byte(idstring))
 	usersArrayLock.RLock()
 	user, exists := users[userid]
-	usersArrayLock.RUnlock()
+	defer usersArrayLock.RUnlock()
 
 	if exists {
 		j, err := json.Marshal(map[string]string{
