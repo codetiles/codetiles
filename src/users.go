@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -54,13 +53,10 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var usernameMap map[string]string
 		err := json.NewDecoder(r.Body).Decode(&usernameMap)
-		// User error encoding json
-		if err != nil {
-			fmt.Println("Err unmarshalling json!")
-			w.WriteHeader(http.StatusNotAcceptable)
-			io.WriteString(w, "Unable to unmarshal data (user -> server)")
-			return
-		}
+
+		if handleJsonUnmarshalError(w, r, "code.go - upload", err) {
+	    return
+	  }
 
 		id := createUser(usernameMap["DisplayName"])
 
@@ -68,11 +64,8 @@ func handleJoiningUser(w http.ResponseWriter, r *http.Request) {
 			"Id": string(id[:]),
 		}
 		resJ, err := json.Marshal(idMap)
-		// Server error encoding id
-		if err != nil {
-			fmt.Println("Err marshalling json!")
-			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "Unable to marshal ID (server -> user)")
+
+		if handleJsonMarshalError(w, r, "user.go - response", err) {
 			return
 		}
 
@@ -105,10 +98,7 @@ func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
 			"Exists":      "true",
 		})
 
-		if err != nil {
-			fmt.Println("Error marshalling json (server -> client)")
-			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "Error marshalling json")
+		if handleJsonMarshalError(w, r, "users.go - verify/exists", err) {
 			return
 		}
 
@@ -116,10 +106,14 @@ func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	j, _ := json.Marshal(map[string]string{
+	j, err := json.Marshal(map[string]string{
 		"DisplayName": "err",
 		"Exists":      "false",
 	})
+
+	if handleJsonMarshalError(w, r, "users.go - verify/does not exist", err) {
+		return
+	}
 
 	io.WriteString(w, string(j))
 

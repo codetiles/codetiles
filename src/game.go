@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -30,9 +29,7 @@ func handleRetrievePlayers(w http.ResponseWriter, r *http.Request) {
 			Players:    []string{},
 		})
 
-		if err != nil {
-			fmt.Println("Error marshalling player list (server -> client)")
-			w.WriteHeader(http.StatusInternalServerError)
+		if handleJsonMarshalError(w, r, "game.go - getPlayers/does not exist", err) {
 			return
 		}
 
@@ -56,9 +53,7 @@ func handleRetrievePlayers(w http.ResponseWriter, r *http.Request) {
 
 		j, err := json.Marshal(returnPlayers)
 
-		if err != nil {
-			fmt.Println("Error marshalling returnPlayers  (server -> client)")
-			w.WriteHeader(http.StatusInternalServerError)
+		if handleJsonMarshalError(w, r, "game.go getPlayers/not in game", err) {
 			return
 		}
 

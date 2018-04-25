@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -14,11 +13,9 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&userJson)
 
-	if err != nil {
-		fmt.Println("Err unmarshalling JSON (client -> server)")
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	if handleJsonUnmarshalError(w, r, "code.go - upload", err) {
+    return
+  }
 
 	// Process id and code
 	id, existsId := userJson["id"]
@@ -26,10 +23,14 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 
 	// If a value is missing, the request didn't meet the requirements
 	if !existsId || !existsCode {
-		rj, _ := json.Marshal(map[string]string{
+		rj, err := json.Marshal(map[string]string{
 			"Success": "false",
 			"Reason":  "JSON is missing essential key value.",
 		})
+
+    if handleJsonMarshalError(w, r, "code.go - missing vals", err) {
+      return
+    }
 
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, string(rj))
@@ -43,10 +44,14 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 	if !ver {
 		w.WriteHeader(http.StatusNotAcceptable)
 
-		rj, _ := json.Marshal(map[string]string{
+		rj, err := json.Marshal(map[string]string{
 			"Success": "false",
 			"Reason":  errstr,
 		})
+
+    if handleJsonMarshalError(w, r, "code.go - err'd code", err) {
+      return
+    }
 
 		io.WriteString(w, string(rj))
 		return
@@ -75,10 +80,14 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 	user.code = rawCode
 	usersArrayLock.Unlock()
 
-	rj, _ := json.Marshal(map[string]string{
+	rj, err := json.Marshal(map[string]string{
 		"Success": "true",
 		"Reason":  "",
 	})
+
+  if handleJsonMarshalError(w, r, "code.go - userid", err) {
+    return
+  }
 
 	io.WriteString(w, string(rj))
 }
