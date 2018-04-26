@@ -2,8 +2,6 @@ let isRegistered;
 let user_id;
 let displayname;
 
-
-
 $(function() {
   // check if localStorage isn't supported
   if(!window.localStorage) window.location.href = '/unsupported';
