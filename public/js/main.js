@@ -20,7 +20,11 @@ $(function() {
 function handleDisplayNameSubmission() {
   let submitted_displayname = $('#displayname').val();
   if(!isRegistered) {
-    register(submitted_displayname);
+    if(submitted_displayname !== '') {
+      register(submitted_displayname);
+    } else {
+      $('#login_widget').append('<div class="error">Name cannot be blank.</div>');
+    }
   } else if(isRegistered) {
     $('#login_widget').hide();
     auth();
