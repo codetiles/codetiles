@@ -2,12 +2,14 @@
   color: red;
 }
 
+.container {
+  display: flex;
+}
+
 .info {
-  float: right;
   width: 50vw;
 }
 
 .code {
-  float: left;
   width: 50vw;
 }
