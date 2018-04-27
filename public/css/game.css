@@ -5,10 +5,10 @@ body, html {
 }
 
 td {
-  background-color: #272d2d;
+  background-color: #282828;
   height: 3vw;
   width: 3vw;
-  color: #e9f1f7;
+  color: #fbf1c7;
   text-align: center;
 }
 
@@ -35,15 +35,15 @@ table, tr, td {
 */
 
 .blue {
-  background-color: #404e7c;
+  background-color: #458588;
 }
 
 .red {
-  background-color: #805e73;
+  background-color: #cc421d;
 }
 
 .yellow {
-  background-color: #bfb26d;
+  background-color: #d79921;
 }
 
 #editor {
