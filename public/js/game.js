@@ -13,19 +13,19 @@ $(document).ready(() => {
       var new_column = $("<td></td>");
       //new_column.css("border-radius", "15%");
       new_row.append(new_column);
-      if (Math.random() > .9) {
+      if (Math.random() > .2) {
         new_column.text(function() {
           return Math.floor(Math.random() * 100)
         });
         new_column.addClass("blue");
       }
-      if (Math.random() > .9) {
+      if (Math.random() > .3) {
         new_column.text(function() {
           return Math.floor(Math.random() * 100)
         });
         new_column.addClass("red");
       }
-      if (Math.random() > .9) {
+      if (Math.random() > .5) {
         new_column.text(function() {
           return Math.floor(Math.random() * 100)
         });
