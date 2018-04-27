@@ -61,7 +61,6 @@ function proper_size() {
   // $("#code").css("right", "0px");
   // $("#code").css("bottom", "0px");
   // $("#code").css("background-color", "blue"); // For the sake of identifying it
-  $("#publish").css("width", $("#code").width());
   // $("#editor").css("width", $("#code").width()*99/100);
   // $("#editor").css("height", $("#code").height());
   // $("#editor").css("resize", "none");
