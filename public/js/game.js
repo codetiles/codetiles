@@ -1,8 +1,6 @@
 $(document).ready(() => {
 
-	$("#publish").on("click", function () {
-		console.log("Hello there, you just clicked the submit button!");
-	});
+
   $(document).resize(() => {
     proper_size();
   });
@@ -39,9 +37,13 @@ $(document).ready(() => {
   $("#board").append(game);
 	var publish = $("<button id='publish'>Publish!</button>");
 	var ide = $("<textarea id='editor'></textarea>");
+  $("#code").append(ide);
 	$("#code").append(publish);
-	$("#code").append(ide);
   proper_size();
+
+  $("#publish").on("click", function () {
+    console.log("Hello there, you just clicked the submit button!");
+  });
 });
 
 function proper_size() {
