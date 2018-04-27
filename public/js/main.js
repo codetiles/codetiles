@@ -20,10 +20,10 @@ $(function() {
 function handleDisplayNameSubmission() {
   let submitted_displayname = $('#displayname').val();
   if(!isRegistered) {
-    if(submitted_displayname !== '') {
+    if(submitted_displayname !== '' && /\s/.test(submitted_displayname) !== true) {
       register(submitted_displayname);
     } else {
-      $('#login_widget').append('<div class="error">Name cannot be blank.</div>');
+      $('#login_widget').append('<div class="error">Name cannot be blank or contain spaces.</div>');
     }
   } else if(isRegistered) {
     $('#login_widget').hide();
