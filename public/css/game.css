@@ -13,17 +13,22 @@ td {
   text-align: center;
 }
 
-tr {
-  width: 2vw;
+#content {
+  z-index: 999;
+
 }
 
-#content {
-  overflow: hidden;
-  height: 100vh;
-  width: auto;
+.center {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+}
+
+#game-board {
+  overflow: hidden;
+  height: 100vh;
+  width: auto;
 
 }
 
@@ -43,4 +48,27 @@ table, tr, td {
 
 .yellow {
   background-color: #bfb26d;
+}
+
+#editor {
+  height: 20vh;
+  width: 100vw;
+  height: inherit;
+  resize: none;
+  display: block;
+  margin: auto;
+  background-color: black;
+  color: white;
+}
+
+#code {
+  position: absolute;
+  height: 20vh;
+  width: 100vw;
+  left: 0;
+  bottom: 0;
+  background-color: black;
+  color: white;
+  z-index: 0;
+  position: relative;
 }
