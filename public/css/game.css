@@ -21,7 +21,7 @@ td {
   width: 100%;
   overflow: hidden;
 
-  
+
   top: 0;
   left: 0;
   height: 100%;
@@ -51,13 +51,13 @@ table, tr, td {
   height: inherit;
   resize: none;
   display: block;
-  background-color: black;
-  color: white;
+  background-color: #282828;
+  color: #fbf1c7;
+  padding: 2vh 2vw;
 }
 
 #editor, #code{
-  padding: 0;
-  margin: 0;
+
   overflow: hidden;
   width: inherit;
 }
@@ -70,13 +70,15 @@ table, tr, td {
   height: 20vh;
   left: 0;
   bottom: 0;
-  background-color: black;
-  color: white;
+  opacity: .85;
   z-index: 99;
+  display: flex;
 }
 
 #publish {
+  padding: 0;
+  margin: 0;
   border-radius: 0;
-  width: inherit;
+  width: 10vw;
   font-size: 20px;
 }
