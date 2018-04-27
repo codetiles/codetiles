@@ -2,8 +2,6 @@ body, html {
   background-color: #e9f1f7;
   margin: 0;
   padding: 0;
-
-
 }
 
 td {
@@ -15,15 +13,18 @@ td {
 }
 
 #content {
-  width: 100vw;
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 #game-board {
+  width: 100%;
+  overflow: hidden;
+
+  
+  top: 0;
+  left: 0;
+  height: 100%;
 
 }
 
