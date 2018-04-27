@@ -18,13 +18,20 @@ tr {
 }
 
 #content {
-  overflow: hidden;
-  height: 100vh;
-  width: auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  height: 200vh;
 
+}
+
+#game-board {
+  overflow: hidden;
+  height: 100vh;
+  width: auto;
+
+  zoom: 200%;
 }
 
 /*

@@ -16,6 +16,7 @@ func main() {
 	http.HandleFunc("/", handleRoot)
 
 	// API endpoints:
+	http.HandleFunc("/api", handleGetVersion)
 	http.HandleFunc("/api/v1", handleGetVersion)
 	http.HandleFunc("/api/v1/createuser", handleJoiningUser)       // users.go
 	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)       // users.go
