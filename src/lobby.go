@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -10,21 +9,11 @@ import (
 // Handle a user joining a lobby
 func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
 	id := r.Header.Get("id")
-	gt := r.Header.Get("gametype")
-
-	gametype := "testing"
-
-	switch gt {
-	case "testing":
-		gametype = "testing"
-	case "1v1":
-		gametype = "1v1"
-	}
 
 	var uid [8]byte
 	copy(uid[:], []byte(id))
 
-	// NOTE: Consider checking if the user is already in a game
+	// NOTE: Consider checking if the user is already in a game and put them back
 	usersArrayLock.RLock()
 	_, ex := users[uid]
 	usersArrayLock.RUnlock()
@@ -43,5 +32,41 @@ func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(gametype)
+	// Allow use for queued players lock for the rest of the function
+	queuedPlayersLock.Lock()
+	defer queuedPlayersLock.Unlock()
+
+	for _, i := range(queuedPlayers) {
+		if i == uid {
+			// If they are already in the queue, set success to false
+			j, err := json.Marshal(map[string]bool{
+				"Success":  false,
+				"IdExists": true,
+			})
+
+			if handleJsonMarshalError(w, r, "lobby.go - joinlobby/already in queue", err) {
+				return
+			}
+
+			io.WriteString(w, string(j))
+			return
+		}
+	}
+
+	queuedPlayers = append(queuedPlayers, uid)
+
+	// If they are already in the queue, set success to false
+	j, err := json.Marshal(map[string]bool{
+		"Success":  true,
+		"IdExists": true,
+	})
+
+	if handleJsonMarshalError(w, r, "lobby.go - joinlobby/already in queue", err) {
+		return
+	}
+
+	io.WriteString(w, string(j))
+	return
+
+
 }
