@@ -23,8 +23,13 @@ $(document).ready(() => {
 	$("#editor").css("display", "block");
 	$("#editor").css("margin-left", "auto");
 	$("#editor").css("margin-right", "auto");
+	$("#editor").css("background-color", "#1A5569");
+	$("#editor").css("color", "white");
     $("#content").kinetic();
   }
+	$("#publish").click(function () {
+		console.log("Hello there, you just clicked the submit button!");
+	});
   $(document).resize(() => {
     proper_size();
   });
