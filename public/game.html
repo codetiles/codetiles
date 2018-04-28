@@ -5,21 +5,23 @@
     <link rel="stylesheet" type="text/css" href="css/game.css">
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/kinetic.min.js"></script>
+    <script src="js/lib/jquery.mousewheel.min.js"></script>
     <script src="js/game.js"></script>
   </head>
   <body>
-    <div class="zoom">
-      <button onclick="zoomin()">+</button>
-      <button onclick="zoomout()">-</button>
-    </div>
-    <div id="content">
-      <div id="board">
+    <div class="container">
+      <div class="zoom">
+        <button onclick="zoomin()">+</button>
+        <button onclick="zoomout()">-</button>
       </div>
-    </div>
-    <div id="code">
-      <textarea id='editor'></textarea>
-      <button id='publish'>Publish!</button>
-
+      <div id="content">
+        <div id="board">
+        </div>
+      </div>
+      <div id="code">
+        <textarea id='editor'></textarea>
+        <button id='publish'>Publish!</button>
+      </div>
     </div>
   </body>
 </html>

@@ -1,7 +1,10 @@
 var zoomratio = 1;
 
 $(document).ready(() => {
-
+  // scroll wheel zoomin
+  $('#content').on('mousewheel', function(event) {
+    event.deltaY === 1 ? zoomin() : zoomout();
+  });
 
   $(document).resize(() => {
     proper_size();
@@ -81,7 +84,7 @@ function zoomin() {
   zoomratio += .2;
   $("#game-board").css("width", document_width * zoomratio)
   $("#game-board").css("height", document_width * zoomratio)
-  $("#game-board").css("font-size", String(16 * zoomratio) + "px"); 
+  $("#game-board").css("font-size", String(16 * zoomratio) + "px");
 }
 
 function zoomout() {
@@ -93,5 +96,5 @@ function zoomout() {
   zoomratio -= .2;
   $("#game-board").css("width", document_width * zoomratio)
   $("#game-board").css("height", document_width * zoomratio)
-  $("#game-board").css("font-size", String(16 * zoomratio) + "px"); 
+  $("#game-board").css("font-size", String(16 * zoomratio) + "px");
 }
