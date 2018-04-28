@@ -1,3 +1,5 @@
+var zoomratio = 1;
+
 $(document).ready(() => {
 
 
@@ -34,10 +36,7 @@ $(document).ready(() => {
     game.append(new_row);
   }
   $("#board").append(game);
-	var publish = $("<button id='publish'>Publish!</button>");
-	var ide = $("<textarea id='editor'></textarea>");
-  $("#code").append(ide);
-	$("#code").append(publish);
+
   proper_size();
 
   $("#publish").on("click", function () {
@@ -71,4 +70,28 @@ function proper_size() {
   // $("#editor").css("background-color", "#1A5569");
   // $("#editor").css("color", "white");
   $("#content").kinetic();
+}
+
+function zoomin() {
+  var document_width = $(document).width();
+  if (zoomratio >= 2) {
+    return
+  }
+
+  zoomratio += .2;
+  $("#game-board").css("width", document_width * zoomratio)
+  $("#game-board").css("height", document_width * zoomratio)
+  $("#game-board").css("font-size", String(16 * zoomratio) + "px"); 
+}
+
+function zoomout() {
+  var document_width = $(document).width();
+  if (zoomratio <= 1) {
+    return;
+  }
+
+  zoomratio -= .2;
+  $("#game-board").css("width", document_width * zoomratio)
+  $("#game-board").css("height", document_width * zoomratio)
+  $("#game-board").css("font-size", String(16 * zoomratio) + "px"); 
 }
