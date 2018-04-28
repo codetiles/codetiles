@@ -80,8 +80,7 @@ function zoomin() {
   if (zoomratio >= 2) {
     return
   }
-
-  zoomratio += .2;
+  zoomratio += .1;
   $("#game-board").css("width", document_width * zoomratio)
   $("#game-board").css("height", document_width * zoomratio)
   $("#game-board").css("font-size", String(16 * zoomratio) + "px");
@@ -92,8 +91,7 @@ function zoomout() {
   if (zoomratio <= 1) {
     return;
   }
-
-  zoomratio -= .2;
+  zoomratio -= .1;
   $("#game-board").css("width", document_width * zoomratio)
   $("#game-board").css("height", document_width * zoomratio)
   $("#game-board").css("font-size", String(16 * zoomratio) + "px");
