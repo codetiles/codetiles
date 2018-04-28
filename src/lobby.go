@@ -36,7 +36,7 @@ func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
 	queuedPlayersLock.Lock()
 	defer queuedPlayersLock.Unlock()
 
-	for _, i := range(queuedPlayers) {
+	for _, i := range queuedPlayers {
 		if i == uid {
 			// If they are already in the queue, set success to false
 			j, err := json.Marshal(map[string]bool{
@@ -67,6 +67,5 @@ func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
 
 	io.WriteString(w, string(j))
 	return
-
 
 }
