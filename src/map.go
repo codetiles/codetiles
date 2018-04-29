@@ -18,7 +18,7 @@ type tile struct {
 type gameBoard struct {
 	tiles   [30][30]tile
 	players [][8]byte
-	id      [12]byte
+	id      [8]byte
 }
 
 func formMap(players [][8]byte) gameBoard {

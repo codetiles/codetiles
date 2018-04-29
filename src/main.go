@@ -13,6 +13,9 @@ func main() {
 
 	users = make(map[[8]byte]user)
 
+	searchtick = make(chan int)
+	go searchtickupdate()
+
 	http.HandleFunc("/", handleRoot)
 
 	// API endpoints:
@@ -22,6 +25,7 @@ func main() {
 	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)       // users.go
 	http.HandleFunc("/api/v1/uploadcode", handleUploadCode)        // code.go
 	http.HandleFunc("/api/v1/findgame", handleJoinLobby)           // lobby.go
+	http.HandleFunc("/api/v1/waitforgame/ws", handleWaitForGame)   // wait.go
 	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers) // game.go
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
@@ -34,8 +38,9 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	if filename[len(filename)-1] == '/' {
 		filename += "index.html"
 	}
+
 	// remove need to append .html to URL
-	if filename == "/game" || filename == "/unsupported" {
+	if filename == "/game" || filename == "/unsupported" || filename == "/lobby" {
 		filename += ".html"
 	}
 
