@@ -33,7 +33,7 @@ func handleJsonUnmarshalError(w http.ResponseWriter, r *http.Request, he string,
 	return false
 }
 
-// Returns the number of players in the queue
+// Returns the number of players in the queue in a string format
 func getNumberOfPlayersInQueue() string {
 	queuedPlayersLock.RLock()
 	queued := len(queuedPlayers)
@@ -41,4 +41,20 @@ func getNumberOfPlayersInQueue() string {
 
 	qString := strconv.Itoa(queued)
 	return qString + " players waiting in queue"
+}
+
+// Removes a player from the queue
+func removePlayerFromQueue(id [8]byte) {
+	var qpa [][8]byte
+
+	queuedPlayersLock.RLock()
+	for _, j := range(queuedPlayers) {
+		if j != id {
+			qpa = append(qpa, j)
+		}
+	}
+	queuedPlayersLock.RUnlock()
+	queuedPlayresLock.Lock()
+	queuedPlayers = qpa
+	queuedPlayersLock.Unlock()
 }

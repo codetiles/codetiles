@@ -37,24 +37,16 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	var uid [8]byte
 	copy(uid[:], []byte(message))
 
+  go tickUser()
+
 	// If a player is queued or doesn't exist, send an error and close connection
 	exists, _, queued, _ := checkUserId(uid)
 	if !exists || queued {
-		w, err := ws.NextWriter(websocket.TextMessage)
-
-		if err != nil {
-			return
-		}
-
-		if !exists {
-			w.Write([]byte("Error: Player doesn't exist"))
-		}
-		if queued {
-			w.Write([]byte("Error: Player is already in a queue"))
-		}
-
-		// We don't have to worry about an error because we are closing the socket
-		w.Close()
+    reason := "Player is already in queue"
+    if !exists {
+      reason = "User id does not exist"
+    }
+		ws.WriteMessage(websocket.TextMessage, []byte(reason))
 		return
 	}
 
@@ -64,24 +56,20 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	queuedPlayersLock.Unlock()
 
 	// Initial update
-	searchtick <- 1
-	ww, err := ws.NextWriter(websocket.TextMessage)
+	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
+
 	if err != nil {
 		return
 	}
-	ww.Write([]byte(getNumberOfPlayersInQueue()))
-	ww.Close()
 
 	// Send the user the # of users online
 	for {
 		select {
 		case <-searchtick:
-			w, err := ws.NextWriter(websocket.TextMessage)
+			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
 				return
 			}
-			w.Write([]byte(getNumberOfPlayersInQueue()))
-			w.Close()
 		}
 	}
 

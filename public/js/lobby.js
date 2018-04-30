@@ -5,5 +5,5 @@ socket.addEventListener('message', function (event) {
 });
 
 socket.addEventListener('open', function (event) {
-  socket.send("PTh3OVcP")
+  socket.send("jX0QQUkd")
 });
