@@ -55,7 +55,7 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	queuedPlayers = append(queuedPlayers, uid)
 	queuedPlayersLock.Unlock()
 	defer removePlayerFromQueue(uid)
-	defer func(){go tickUser()}()
+	defer func() { go tickUser() }()
 
 	quit := make(chan int)
 
