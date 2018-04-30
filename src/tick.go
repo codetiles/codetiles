@@ -13,7 +13,7 @@ func tickUser() {
 }
 
 func performGameTick() {
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(250 * time.Millisecond)
 	gametick <- 0
 	performGameTick()
 }
