@@ -53,6 +53,8 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 		queuedPlayersLock.Unlock()
 	}
 
+	go tickUser()
+
 	defer removePlayerFromQueue(uid)
 	defer func() { go tickUser() }()
 
