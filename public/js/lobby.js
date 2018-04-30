@@ -1,12 +1,21 @@
 const socket = new WebSocket('ws://localhost:8080/api/v1/ws/findgame');
 
 socket.addEventListener('message', function (event) {
-  console.log('Message from server ', event.data);
+  if (event.data == "User id does not exist") {
+    window.location.href = "/"
+  }
+  $("#status").text(function(){
+    return event.data
+  })
 });
 
 socket.addEventListener('open', function (event) {
-  socket.send("3nsvyZ9v")
+  socket.send(localStorage.getItem('user_id'));
 });
+
+setInterval(function(){
+  socket.send("dipski in lipski")
+}, 250);
 
 $(window).on('beforeunload', function(){
     socket.close();

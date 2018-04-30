@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
@@ -56,29 +58,58 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	go tickUser()
 
 	defer removePlayerFromQueue(uid)
-	defer func() { go tickUser() }()
+	defer func() {
+		go tickUser()
+	}()
+
 
 	// Currently unimplented
 	quit := make(chan int)
+
+	var mut sync.Mutex
 
 	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 	if err != nil {
 		return
 	}
 
+	go func() {
+		for {
+			ws.SetReadDeadline(time.Now().Add(time.Duration(time.Second * 5)))
+			_, _, err := ws.ReadMessage()
+			if err != nil {
+				return
+			}
+			mut.Lock()
+			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
+			err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
+			if err != nil {
+				return
+			}
+			mut.Unlock()
+		}
+
+	}()
+
 	// Send the user the # of users online
 	for {
 		select {
 		case <-searchtick:
+			mut.Lock()
+			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
 			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
 				return
 			}
+			mut.Unlock()
 		case <-gametick:
+			mut.Lock()
+			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
 			err := ws.WriteMessage(websocket.PingMessage, nil)
 			if err != nil {
 				return
 			}
+			mut.Unlock()
 		case <-quit:
 			return
 		}

@@ -64,5 +64,5 @@ function logout() {
 }
 
 function startGame() {
-  window.location.href = '/game';
+  window.location.href = '/lobby';
 }
