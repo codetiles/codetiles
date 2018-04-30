@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -18,6 +17,7 @@ var upgrader = websocket.Upgrader{
 func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Socket opened")
 	ws, err := upgrader.Upgrade(w, r, nil)
+	defer ws.WriteMessage(websocket.CloseMessage, []byte{})
 	defer ws.Close()
 	defer fmt.Println("Socket closed")
 
@@ -42,21 +42,21 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 
 	// If a player is queued or doesn't exist, send an error and close connection
 	exists, _, queued, _ := checkUserId(uid)
-	if !exists || queued {
-		reason := "Player is already in queue"
-		if !exists {
-			reason = "User id does not exist"
-		}
-		ws.WriteMessage(websocket.TextMessage, []byte(reason))
+	if !exists {
+		ws.WriteMessage(websocket.TextMessage, []byte("User id does not exist"))
 		return
 	}
 
-	queuedPlayersLock.Lock()
-	queuedPlayers = append(queuedPlayers, uid)
-	queuedPlayersLock.Unlock()
+	if !queued {
+		queuedPlayersLock.Lock()
+		queuedPlayers = append(queuedPlayers, uid)
+		queuedPlayersLock.Unlock()
+	}
+
 	defer removePlayerFromQueue(uid)
 	defer func() { go tickUser() }()
 
+	// Currently unimplented
 	quit := make(chan int)
 
 	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
@@ -68,14 +68,12 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-searchtick:
-			ws.SetWriteDeadline(time.Now().Add(time.Second))
 			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
 				return
 			}
 		case <-gametick:
-			ws.SetWriteDeadline(time.Now().Add(time.Second))
-			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
+			err := ws.WriteMessage(websocket.PingMessage, nil)
 			if err != nil {
 				return
 			}
