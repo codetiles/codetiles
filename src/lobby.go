@@ -1,71 +1,86 @@
 package main
 
 import (
-	"encoding/json"
-	"io"
+	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/gorilla/websocket"
 )
 
-// Handle a user joining a lobby
-func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
-	id := r.Header.Get("id")
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
 
-	var uid [8]byte
-	copy(uid[:], []byte(id))
+// Create a websocket and send a user information about the game they are
+// waititng for
+func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Socket opened")
+	ws, err := upgrader.Upgrade(w, r, nil)
+	defer ws.Close()
+	defer fmt.Println("Socket closed")
 
-	// NOTE: Consider checking if the user is already in a game and put them back
-	usersArrayLock.RLock()
-	_, ex := users[uid]
-	usersArrayLock.RUnlock()
-
-	if !ex {
-		j, err := json.Marshal(map[string]bool{
-			"Success":  false,
-			"IdExists": false,
-		})
-
-		if handleJsonMarshalError(w, r, "lobby.go - joinlobby/user does not exist", err) {
-			return
-		}
-
-		io.WriteString(w, string(j))
+	if err != nil {
+		fmt.Println("Error creating websocket in wait.go")
+		fmt.Println("Error:", err)
+		fmt.Println("Socket closed")
 		return
 	}
 
-	// Allow use for queued players lock for the rest of the function
+	// The user must send an id that they want to put in a lobby
+	_, message, err := ws.ReadMessage()
+
+	if err != nil {
+		return
+	}
+
+	var uid [8]byte
+	copy(uid[:], []byte(message))
+
+	// If a player is queued or doesn't exist, send an error and close connection
+	exists, _, queued, _ := checkUserId(uid)
+	if !exists || queued {
+		reason := "Player is already in queue"
+		if !exists {
+			reason = "User id does not exist"
+		}
+		ws.WriteMessage(websocket.TextMessage, []byte(reason))
+		return
+	}
+
 	queuedPlayersLock.Lock()
-	defer queuedPlayersLock.Unlock()
+	queuedPlayers = append(queuedPlayers, uid)
+	queuedPlayersLock.Unlock()
+	defer removePlayerFromQueue(uid)
 
-	for _, i := range queuedPlayers {
-		if i == uid {
-			// If they are already in the queue, set success to false
-			j, err := json.Marshal(map[string]bool{
-				"Success":  false,
-				"IdExists": true,
-			})
+	go tickUser()
+	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
+	if err != nil {
+		return
+	}
 
-			if handleJsonMarshalError(w, r, "lobby.go - joinlobby/already in queue", err) {
+	// Send the user the # of users online
+	for {
+		select {
+		case <-searchtick:
+			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
+			if err != nil {
+				return
+			}
+		case <-gametick:
+			ws.SetWriteDeadline(time.Now().Add(250 * time.Millisecond))
+
+			w, err := ws.NextWriter(websocket.PingMessage)
+			if err != nil {
 				return
 			}
 
-			io.WriteString(w, string(j))
-			return
+			err = w.Close()
+			if err != nil {
+				return
+			}
 		}
 	}
-
-	queuedPlayers = append(queuedPlayers, uid)
-
-	// If they are already in the queue, set success to false
-	j, err := json.Marshal(map[string]bool{
-		"Success":  true,
-		"IdExists": true,
-	})
-
-	if handleJsonMarshalError(w, r, "lobby.go - joinlobby/already in queue", err) {
-		return
-	}
-
-	io.WriteString(w, string(j))
-	return
 
 }
