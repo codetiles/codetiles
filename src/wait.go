@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -37,8 +38,6 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	var uid [8]byte
 	copy(uid[:], []byte(message))
 
-  go tickUser()
-
 	// If a player is queued or doesn't exist, send an error and close connection
 	exists, _, queued, _ := checkUserId(uid)
 	if !exists || queued {
@@ -50,14 +49,13 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Add a player to the queue
 	queuedPlayersLock.Lock()
 	queuedPlayers = append(queuedPlayers, uid)
 	queuedPlayersLock.Unlock()
+	defer removePlayerFromQueue(uid)
 
-	// Initial update
+	go tickUser()
 	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
-
 	if err != nil {
 		return
 	}
@@ -67,6 +65,18 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-searchtick:
 			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
+			if err != nil {
+				return
+			}
+		case <-gametick:
+			ws.SetWriteDeadline(time.Now().Add(250 * time.Millisecond))
+
+			w, err := ws.NextWriter(websocket.PingMessage)
+			if err != nil {
+				return
+			}
+
+			err = w.Close()
 			if err != nil {
 				return
 			}

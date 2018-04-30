@@ -54,7 +54,7 @@ func removePlayerFromQueue(id [8]byte) {
 		}
 	}
 	queuedPlayersLock.RUnlock()
-	queuedPlayresLock.Lock()
+	queuedPlayersLock.Lock()
 	queuedPlayers = qpa
 	queuedPlayersLock.Unlock()
 }
