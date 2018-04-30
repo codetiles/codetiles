@@ -5,7 +5,7 @@ socket.addEventListener('message', function (event) {
 });
 
 socket.addEventListener('open', function (event) {
-  socket.send("gBGR9PkK")
+  socket.send("3nsvyZ9v")
 });
 
 $(window).on('beforeunload', function(){

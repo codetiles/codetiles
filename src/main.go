@@ -25,7 +25,7 @@ func main() {
 	http.HandleFunc("/api/v1/createuser", handleJoiningUser)       // users.go
 	http.HandleFunc("/api/v1/verifyuser/", handleVerifyUser)       // users.go
 	http.HandleFunc("/api/v1/uploadcode", handleUploadCode)        // code.go
-	http.HandleFunc("/api/v1/findgame/ws", handleWaitForGame)      // wait.go
+	http.HandleFunc("/api/v1/ws/findgame", handleWaitForGame)      // wait.go
 	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers) // game.go
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
