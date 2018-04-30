@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 // Handle an error marshalling (or encoding) json
@@ -30,4 +31,14 @@ func handleJsonUnmarshalError(w http.ResponseWriter, r *http.Request, he string,
 	}
 
 	return false
+}
+
+// Returns the number of players in the queue
+func getNumberOfPlayersInQueue() string {
+  queuedPlayersLock.RLock()
+  queued := len(queuedPlayers)
+  queuedPlayersLock.RUnlock()
+
+  qString := strconv.Itoa(queued)
+  return qString + " players waiting in queue"
 }

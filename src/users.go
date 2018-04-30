@@ -118,3 +118,30 @@ func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, string(j))
 
 }
+
+// Checks if a user exists, is in a game, in a queue, and what their displayname is
+func checkUserId(id [8]byte) (bool, bool, bool, string) {
+	usersArrayLock.RLock()
+	_, exists := users[id]
+	usersArrayLock.RUnlock()
+	if !exists {
+		return false, false, false, ""
+	}
+
+	usersArrayLock.RLock()
+	disp := users[id].name
+	inGame := users[id].inGame
+	usersArrayLock.RUnlock()
+
+	queuedPlayersLock.RLock()
+	defer queuedPlayersLock.RUnlock()
+	inQueue := false
+
+	for _, j := range(queuedPlayers) {
+		if j == id {
+			inQueue = true
+		}
+	}
+
+	return true, inGame, inQueue, disp
+}

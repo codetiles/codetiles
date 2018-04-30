@@ -1,13 +1,8 @@
 package main
 
 import (
-  "time"
+
 )
 
+// use <-searchtick in select to check when a user joins the queue
 var searchtick chan int
-
-func searchtickupdate()  {
-  time.Sleep(500 * time.Millisecond)
-  searchtick <- 1
-  searchtickupdate()
-}

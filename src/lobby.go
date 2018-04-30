@@ -54,6 +54,7 @@ func handleJoinLobby(w http.ResponseWriter, r *http.Request) {
 	}
 
 	queuedPlayers = append(queuedPlayers, uid)
+	searchtick <- 0
 
 	// If they are already in the queue, set success to false
 	j, err := json.Marshal(map[string]bool{

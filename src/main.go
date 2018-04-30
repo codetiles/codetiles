@@ -14,7 +14,6 @@ func main() {
 	users = make(map[[8]byte]user)
 
 	searchtick = make(chan int)
-	go searchtickupdate()
 
 	http.HandleFunc("/", handleRoot)
 
