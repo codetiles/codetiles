@@ -48,7 +48,7 @@ func removePlayerFromQueue(id [8]byte) {
 	var qpa [][8]byte
 
 	queuedPlayersLock.RLock()
-	for _, j := range(queuedPlayers) {
+	for _, j := range queuedPlayers {
 		if j != id {
 			qpa = append(qpa, j)
 		}

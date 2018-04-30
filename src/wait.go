@@ -41,10 +41,10 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	// If a player is queued or doesn't exist, send an error and close connection
 	exists, _, queued, _ := checkUserId(uid)
 	if !exists || queued {
-    reason := "Player is already in queue"
-    if !exists {
-      reason = "User id does not exist"
-    }
+		reason := "Player is already in queue"
+		if !exists {
+			reason = "User id does not exist"
+		}
 		ws.WriteMessage(websocket.TextMessage, []byte(reason))
 		return
 	}
