@@ -35,10 +35,10 @@ func handleJsonUnmarshalError(w http.ResponseWriter, r *http.Request, he string,
 
 // Returns the number of players in the queue
 func getNumberOfPlayersInQueue() string {
-  queuedPlayersLock.RLock()
-  queued := len(queuedPlayers)
-  queuedPlayersLock.RUnlock()
+	queuedPlayersLock.RLock()
+	queued := len(queuedPlayers)
+	queuedPlayersLock.RUnlock()
 
-  qString := strconv.Itoa(queued)
-  return qString + " players waiting in queue"
+	qString := strconv.Itoa(queued)
+	return qString + " players waiting in queue"
 }

@@ -137,7 +137,7 @@ func checkUserId(id [8]byte) (bool, bool, bool, string) {
 	defer queuedPlayersLock.RUnlock()
 	inQueue := false
 
-	for _, j := range(queuedPlayers) {
+	for _, j := range queuedPlayers {
 		if j == id {
 			inQueue = true
 		}
