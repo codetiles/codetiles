@@ -28,6 +28,8 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go tickUser()
+
 	// The user must send an id that they want to put in a lobby
 	_, message, err := ws.ReadMessage()
 
@@ -53,8 +55,10 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	queuedPlayers = append(queuedPlayers, uid)
 	queuedPlayersLock.Unlock()
 	defer removePlayerFromQueue(uid)
+	defer func(){go tickUser()}()
 
-	go tickUser()
+	quit := make(chan int)
+
 	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 	if err != nil {
 		return
@@ -64,22 +68,19 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-searchtick:
+			ws.SetWriteDeadline(time.Now().Add(time.Second))
 			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
 				return
 			}
 		case <-gametick:
-			ws.SetWriteDeadline(time.Now().Add(250 * time.Millisecond))
-
-			w, err := ws.NextWriter(websocket.PingMessage)
+			ws.SetWriteDeadline(time.Now().Add(time.Second))
+			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
 				return
 			}
-
-			err = w.Close()
-			if err != nil {
-				return
-			}
+		case <-quit:
+			return
 		}
 	}
 
