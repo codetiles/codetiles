@@ -14,8 +14,8 @@ func main() {
 	users = make(map[[8]byte]user)
 
 	searchtick = make(chan int)
-	gametick = make(chan int)
-	go performGameTick()
+	autosearchtick = make(chan int)
+	go performSearchTick()
 	go checkCountdown()
 
 	http.HandleFunc("/", handleRoot)

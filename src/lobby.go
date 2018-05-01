@@ -134,7 +134,7 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			mut.Unlock()
-		case <-gametick:
+		case <-autosearchtick:
 			mut.Lock()
 			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
 			err := ws.WriteMessage(websocket.PingMessage, nil)
