@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -58,7 +58,6 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		go tickUser()
 	}()
-
 
 	// Currently unimplented
 	quit := make(chan int)
