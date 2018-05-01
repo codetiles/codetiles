@@ -32,7 +32,7 @@ func checkCountdown() {
   lenQ := len(queuedPlayers)
   queuedPlayersLock.RUnlock()
 
-  if lenQ > 1 {
+  if lenQ >= 2 {
     wslock.RLock()
     defer wslock.RUnlock()
 
