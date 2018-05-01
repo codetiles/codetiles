@@ -7,7 +7,7 @@ socket.addEventListener('message', function (event) {
   }
   // game has started, redirect
   if (event.data == "...") {
-    
+    window.location.href="/game"
   }
   // show current message as text
   $("#status").text(function(){
