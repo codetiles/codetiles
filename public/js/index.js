@@ -48,6 +48,7 @@ function auth() {
     if(data.Exists == "false") {
       localStorage.removeItem('user_id');
       $('#login_widget').show();
+      location.reload();
     } else {
       user_id = localStorage.getItem('user_id');
       displayname = data.DisplayName;
