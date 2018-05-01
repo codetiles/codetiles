@@ -15,3 +15,9 @@
   width: 50vw;
   flex: 1;
 }
+
+#code_textarea {
+  background-color: #282828;
+  color: #fbf1c7;
+  padding: 2vh 2vw;
+}
