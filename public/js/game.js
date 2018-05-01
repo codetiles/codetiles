@@ -42,9 +42,24 @@ $(document).ready(() => {
   proper_size();
 
   $("#publish").on("click", function () {
-    console.log("Hello there, you just clicked the submit button!");
+    submitCode();
   });
 });
+
+function submitCode() {
+  let submitted_code = $('#code').val();
+  // verify that code contains characters
+  if (submitted_code !== '' && /\s/.test(submitted_code) !== true) {
+    let submitted_code = encodeURI(submitted_code);
+    // TODO: CHECK IF USER IS LOGGED IN BEFORE ALLOWING /GAME ACCESSED OR THIS CODE TO WORK
+    let user_id = localStorage.getItem('user_id');
+    let data = `{"id" : "` + user_id + `", "code" : "` + submitted_code + `"}`
+    $.post("api/v1/uploadcode", data, function(data) {
+      let response = JSON.parse(data);
+      console.log(response)
+    })
+  }
+}
 
 function proper_size() {
   var document_height = $(document).height();
@@ -55,7 +70,7 @@ function proper_size() {
 function zoomin() {
   var document_width = $(document).width();
   if (zoomratio >= 2) {
-    return
+    //return;
   }
   zoomratio += .1;
   $("#game-board").css("width", document_width * zoomratio)
@@ -66,7 +81,7 @@ function zoomin() {
 function zoomout() {
   var document_width = $(document).width();
   if (zoomratio <= 1) {
-    return;
+    //return;
   }
   zoomratio -= .1;
   $("#game-board").css("width", document_width * zoomratio)
