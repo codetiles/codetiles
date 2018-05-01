@@ -15,8 +15,8 @@ func main() {
 
 	searchtick = make(chan int)
 	gametick = make(chan int)
-	countdown = make(chan string)
 	go performGameTick()
+	go checkCountdown()
 
 	http.HandleFunc("/", handleRoot)
 

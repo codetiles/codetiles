@@ -9,6 +9,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var openws []*websocket.Conn
+var wwslock []*sync.Mutex
+var wslock sync.RWMutex
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -20,6 +24,34 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	defer ws.WriteMessage(websocket.CloseMessage, []byte{})
 	defer ws.Close()
+	mut := new(sync.Mutex)
+
+	wslock.Lock()
+	openws = append(openws, ws)
+	wwslock = append(wwslock, mut)
+	wslock.Unlock()
+
+	defer func() {
+		wslock.Lock()
+		var arr []*websocket.Conn
+		for _, j := range openws {
+			if j != ws {
+				arr = append(arr, j)
+			}
+		}
+
+		var arr2 []*sync.Mutex
+		for _, j := range wwslock {
+			if j != mut {
+				arr2 = append(arr2, j)
+			}
+		}
+
+		openws = arr
+		wwslock = arr2
+		wslock.Unlock()
+	}()
+	// defer fmt.Println("Socket closed")
 
 	if err != nil {
 		fmt.Println("Error creating websocket in wait.go")
@@ -62,13 +94,15 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	// Currently unimplented
 	quit := make(chan int)
 
-	var mut sync.Mutex
-
+	mut.Lock()
 	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 	if err != nil {
+		mut.Unlock()
 		return
 	}
+	mut.Unlock()
 
+	// To prevent connections being closed, recieve a message from the client every now and then
 	go func() {
 		for {
 			ws.SetReadDeadline(time.Now().Add(time.Duration(time.Second * 5)))
@@ -80,6 +114,7 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
 			err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
+				mut.Unlock()
 				return
 			}
 			mut.Unlock()
@@ -95,6 +130,7 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
 			err := ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
 			if err != nil {
+				mut.Unlock()
 				return
 			}
 			mut.Unlock()
@@ -103,9 +139,11 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 1)))
 			err := ws.WriteMessage(websocket.PingMessage, nil)
 			if err != nil {
+				mut.Unlock()
 				return
 			}
 			mut.Unlock()
+
 		case <-quit:
 			return
 		}

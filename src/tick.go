@@ -1,17 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"strconv"
 	"time"
-)
 
-// This file contains 2 types of functions:
-// Functions that call themselves and update a channel
-// Functions that are called as goroutines to change a channel
+	"github.com/gorilla/websocket"
+)
 
 // use <-searchtick in select to check when a user joins the queue
 var searchtick chan int
 var gametick chan int
-var countdown chan string
 
 func tickUser() {
 	searchtick <- 0
@@ -24,16 +23,61 @@ func performGameTick() {
 }
 
 func checkCountdown() {
+	defer func() {
+		time.Sleep(time.Millisecond * 100)
+		checkCountdown()
+	}()
+
 	queuedPlayersLock.RLock()
-	lqp := len(queuedPlayers)
+	lenQ := len(queuedPlayers)
 	queuedPlayersLock.RUnlock()
 
-	// Once the # of queued players reaches 2, we start a countdown for a game
-	if lqp < 2 {
-		return
-	}
+	if lenQ > 1 {
+		wslock.RLock()
+		defer wslock.RUnlock()
 
-	for {
+		for _, j := range wwslock {
+			fmt.Println(j)
+			j.Lock()
+		}
 
+		for i := 5; i >= 1; i-- {
+
+			ss := "Game starts in " + strconv.Itoa(i)
+			if i > 1 {
+				ss += " seconds"
+			} else {
+				ss += " second"
+			}
+
+			for _, j := range openws {
+				j.SetWriteDeadline(time.Now().Add(time.Duration(time.Millisecond * 100)))
+				err := j.WriteMessage(websocket.TextMessage, []byte(ss))
+				if err != nil {
+					fmt.Println(err)
+					j.Close()
+				}
+			}
+
+			fmt.Println(ss)
+			time.Sleep(time.Second)
+		}
+
+		for _, j := range openws {
+			j.SetWriteDeadline(time.Now().Add(time.Duration(time.Millisecond * 100)))
+			j.WriteMessage(websocket.TextMessage, []byte("..."))
+			j.Close()
+		}
+
+		for _, j := range wwslock {
+			fmt.Println(j)
+			j.Unlock()
+		}
+
+		fmt.Println(queuedPlayers)
+
+		queuedPlayersLock.Lock()
+		queuedPlayers = [][8]byte{}
+		queuedPlayersLock.Unlock()
 	}
 }

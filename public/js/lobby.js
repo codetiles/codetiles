@@ -3,11 +3,11 @@ const socket = new WebSocket('ws://localhost:8080/api/v1/ws/findgame');
 socket.addEventListener('message', function (event) {
   // user isn't logged in
   if (event.data == "User id does not exist") {
-    window.location.href = "/"
+    $("#desc").html(function() { return "<a href='/'>Back to home page</a>" });
   }
   // game has started, redirect
   if (event.data == "...") {
-    window.location.href = "/game"
+    
   }
   // show current message as text
   $("#status").text(function(){
