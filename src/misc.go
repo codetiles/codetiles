@@ -40,7 +40,11 @@ func getNumberOfPlayersInQueue() string {
 	queuedPlayersLock.RUnlock()
 
 	qString := strconv.Itoa(queued)
-	return qString + " player(s) waiting in queue"
+	if queued <= 1 {
+		return qString + " player waiting in queue..."
+	}
+	return qString + " players wating in queue..."
+
 }
 
 // Removes a player from the queue

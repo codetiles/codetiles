@@ -14,7 +14,7 @@ socket.addEventListener('open', function (event) {
 });
 
 setInterval(function(){
-  socket.send("dipski in lipski")
+  socket.send("...")
 }, 250);
 
 $(window).on('beforeunload', function(){

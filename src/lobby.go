@@ -17,16 +17,13 @@ var upgrader = websocket.Upgrader{
 // Create a websocket and send a user information about the game they are
 // waititng for
 func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Socket opened")
 	ws, err := upgrader.Upgrade(w, r, nil)
 	defer ws.WriteMessage(websocket.CloseMessage, []byte{})
 	defer ws.Close()
-	defer fmt.Println("Socket closed")
 
 	if err != nil {
 		fmt.Println("Error creating websocket in wait.go")
 		fmt.Println("Error:", err)
-		fmt.Println("Socket closed")
 		return
 	}
 
