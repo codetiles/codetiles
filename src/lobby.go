@@ -24,13 +24,18 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	defer ws.WriteMessage(websocket.CloseMessage, []byte{})
 	defer ws.Close()
+
+	// WARNING: If this is not unlocked before return, the lobby sys will hang.
+	// This is pointed to in wwslock
 	mut := new(sync.Mutex)
 
+	// Add both the write lock and the websocket writter
 	wslock.Lock()
 	openws = append(openws, ws)
 	wwslock = append(wwslock, mut)
 	wslock.Unlock()
 
+	// Remove the ws and lock when returning
 	defer func() {
 		wslock.Lock()
 		var arr []*websocket.Conn
@@ -78,21 +83,20 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// A player can join a lobby if they are already queued, so no double queueing
 	if !queued {
 		queuedPlayersLock.Lock()
 		queuedPlayers = append(queuedPlayers, uid)
 		queuedPlayersLock.Unlock()
 	}
 
+	// Update other sockets when this user joins
 	go tickUser()
 
 	defer removePlayerFromQueue(uid)
 	defer func() {
 		go tickUser()
 	}()
-
-	// Currently unimplented
-	quit := make(chan int)
 
 	mut.Lock()
 	err = ws.WriteMessage(websocket.TextMessage, []byte(getNumberOfPlayersInQueue()))
@@ -122,7 +126,8 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 
 	}()
 
-	// Send the user the # of users online
+	// Send the user the # of users online when one joins or when an autosearchtick
+	// Elapses for every user
 	for {
 		select {
 		case <-searchtick:
@@ -143,9 +148,6 @@ func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			mut.Unlock()
-
-		case <-quit:
-			return
 		}
 	}
 

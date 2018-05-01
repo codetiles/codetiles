@@ -22,6 +22,7 @@ func performSearchTick() {
 	performSearchTick()
 }
 
+// Check if the countdown has started every 100 milliseconds
 func checkCountdown() {
 	defer func() {
 		time.Sleep(time.Millisecond * 100)
@@ -32,10 +33,13 @@ func checkCountdown() {
 	lenQ := len(queuedPlayers)
 	queuedPlayersLock.RUnlock()
 
+	// If there are >= 2 players, start the countdown
 	if lenQ >= 2 {
 		wslock.RLock()
 		defer wslock.RUnlock()
 
+		// Lock every sockets writer
+		// WARNING: If a socket's locker is stuck in the locked state, it will hang
 		for _, j := range wwslock {
 			j.Lock()
 		}
@@ -49,6 +53,7 @@ func checkCountdown() {
 				ss += " second"
 			}
 
+			// Write the timestamp to every user
 			for _, j := range openws {
 				j.SetWriteDeadline(time.Now().Add(time.Duration(time.Millisecond * 100)))
 				err := j.WriteMessage(websocket.TextMessage, []byte(ss))
@@ -68,6 +73,7 @@ func checkCountdown() {
 			j.Close()
 		}
 
+		// Unlock every websocket writter
 		for _, j := range wwslock {
 			j.Unlock()
 		}
