@@ -16,7 +16,6 @@ $(document).ready(() => {
     var new_row = $("<tr></tr>");
     for (var j = 0; j < GAME_SIZE; j++) {
       var new_column = $("<td></td>");
-      //new_column.css("border-radius", "15%");
       new_row.append(new_column);
       if (Math.random() > .9) {
         new_column.text(function() {
