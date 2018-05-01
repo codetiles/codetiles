@@ -1,11 +1,11 @@
 var zoomratio = 1;
 
 $(document).ready(() => {
+  // SETUP
   // scroll wheel zoomin
   $('#content').on('mousewheel', function(event) {
     event.deltaY === 1 ? zoomin() : zoomout();
-  });
-
+  // set game size properly on window resizing
   $(document).resize(() => {
     proper_size();
   });
@@ -31,9 +31,7 @@ $(document).ready(() => {
         else {
           new_column.addClass("yellow")
         }
-
       }
-
     }
     game.append(new_row);
   }
@@ -71,7 +69,7 @@ function proper_size() {
 function zoomin() {
   var document_width = $(document).width();
   if (zoomratio >= 2) {
-    //return;
+    return;
   }
   zoomratio += .1;
   $("#game-board").css("width", document_width * zoomratio)
@@ -82,7 +80,7 @@ function zoomin() {
 function zoomout() {
   var document_width = $(document).width();
   if (zoomratio <= 1) {
-    //return;
+    return;
   }
   zoomratio -= .1;
   $("#game-board").css("width", document_width * zoomratio)
