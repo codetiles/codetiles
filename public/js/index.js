@@ -6,6 +6,12 @@ $(function() {
   // check if localStorage isn't supported
   if(!window.localStorage) window.location.href = '/unsupported';
 
+  $("#displayname").on('keyup', function (e) {
+    if (e.keyCode == 13) {
+      handleDisplayNameSubmission();
+    }
+  });
+
   if(localStorage.getItem('user_id') != null) {
     $('#login_widget').hide();
     isRegistered = true;
