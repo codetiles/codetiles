@@ -50,6 +50,7 @@ function submitCode() {
   let submitted_code = $('textarea#code').val();
   // verify that code contains characters
   if (submitted_code !== '' && /\s/.test(submitted_code) !== true) {
+    // TODO: CHECK FOR POSSIBLE BUG WITH CODE NOT EXECUTING BECAUSE OF ENCODED CHARS
     submitted_code = encodeURI(submitted_code);
     // TODO: CHECK IF USER IS LOGGED IN BEFORE ALLOWING /GAME ACCESSED OR THIS CODE TO WORK
     let user_id = localStorage.getItem('user_id');
