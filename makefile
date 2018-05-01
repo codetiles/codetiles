@@ -13,6 +13,6 @@ depends:
 	@go get github.com/gorilla/websocket
 gofmt:
 	@echo "Running gofmt on all code"
-	gofmt -w src/
+	gofmt -w -s src/
 	@echo "Testing... "
 	@go run src/*.go
