@@ -43,7 +43,7 @@ func getNumberOfPlayersInQueue() string {
 	if queued <= 1 {
 		return qString + " player waiting in queue..."
 	}
-	return qString + " players wating in queue..."
+	return qString + " players waiting in queue..."
 
 }
 
