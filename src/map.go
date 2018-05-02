@@ -20,9 +20,10 @@ type gameBoard struct {
 	tiles   [30][30]tile
 	players [][8]byte
 	id      [8]byte
+	tOffset int
 }
 
-func formMap(players [][8]byte) [8]byte {
+func formMap(players [][8]byte, tOffset int) [8]byte {
 	// Create a sample tile
 	var emptyTile tile
 	emptyTile.tileType = "/"
@@ -50,6 +51,7 @@ func formMap(players [][8]byte) [8]byte {
 	var randomId [8]byte
 	copy(randomId[:], []byte(rb64))
 	newMap.id = randomId
+	newMap.tOffset = tOffset
 
 	lockGameBoards.Lock()
 	games = append(games, newMap)
@@ -61,7 +63,9 @@ func formMap(players [][8]byte) [8]byte {
 // Create a map and clear the queued players
 func startGame() {
 	queuedPlayersLock.Lock()
-	formMap(queuedPlayers)
+	gTickLock.RLock()
+	formMap(queuedPlayers, gTick)
+	gTickLock.RUnlock()
 	queuedPlayers = [][8]byte{}
 	fmt.Println("Starting game...")
 	lockGameBoards.RLock()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
@@ -11,6 +12,9 @@ import (
 // use <-searchtick in select to check when a user joins the queue
 var searchtick chan int
 var autosearchtick chan int
+
+var gTick int
+var gTickLock sync.RWMutex
 
 func tickUser() {
 	searchtick <- 0
@@ -81,4 +85,12 @@ func checkCountdown() {
 		startGame()
 
 	}
+}
+
+func gameTick() {
+	gTickLock.Lock()
+	gTick++
+	gTickLock.Unlock()
+	time.Sleep(time.Second)
+	gameTick()
 }

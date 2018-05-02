@@ -17,6 +17,7 @@ func main() {
 	autosearchtick = make(chan int)
 	go performSearchTick()
 	go checkCountdown()
+	go gameTick()
 
 	http.HandleFunc("/", handleRoot)
 
