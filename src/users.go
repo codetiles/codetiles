@@ -88,27 +88,13 @@ func handleVerifyUser(w http.ResponseWriter, r *http.Request) {
 	// Copy the user id and look it up in the users array
 	var userid [8]byte
 	copy(userid[:], []byte(idstring))
-	usersArrayLock.RLock()
-	user, exists := users[userid]
-	defer usersArrayLock.RUnlock()
 
-	if exists {
-		j, err := json.Marshal(map[string]string{
-			"DisplayName": user.name,
-			"Exists":      "true",
-		})
-
-		if handleJsonMarshalError(w, r, "users.go - verify/exists", err) {
-			return
-		}
-
-		io.WriteString(w, string(j))
-		return
-	}
+	exists, inGame, _, disp := checkUserId(userid)
 
 	j, err := json.Marshal(map[string]string{
-		"DisplayName": "err",
-		"Exists":      "false",
+		"DisplayName": disp,
+		"Exists":      boolToString(exists),
+		"InGame":      boolToString(inGame),
 	})
 
 	if handleJsonMarshalError(w, r, "users.go - verify/does not exist", err) {

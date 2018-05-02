@@ -62,3 +62,10 @@ func removePlayerFromQueue(id [8]byte) {
 	queuedPlayers = qpa
 	queuedPlayersLock.Unlock()
 }
+
+func boolToString(x bool) string {
+	if x {
+		return "true"
+	}
+	return "false"
+}
