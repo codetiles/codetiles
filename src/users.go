@@ -22,6 +22,7 @@ type user struct {
 	name   string
 	inGame bool
 	exp    int
+	gameId [8]byte
 	code   string
 }
 

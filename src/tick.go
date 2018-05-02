@@ -78,8 +78,7 @@ func checkCountdown() {
 			j.Unlock()
 		}
 
-		queuedPlayersLock.Lock()
-		queuedPlayers = [][8]byte{}
-		queuedPlayersLock.Unlock()
+		startGame()
+
 	}
 }
