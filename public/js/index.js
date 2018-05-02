@@ -6,6 +6,7 @@ $(function() {
   // check if localStorage isn't supported
   if(!window.localStorage) window.location.href = '/unsupported';
 
+  // if enter key is pressed (while displayname is focused), submit data
   $("#displayname").on('keyup', function (e) {
     if (e.keyCode == 13) {
       handleDisplayNameSubmission();

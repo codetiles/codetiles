@@ -9,6 +9,12 @@ socket.addEventListener('message', function (event) {
   if (event.data == "...") {
     window.location.href="/game"
   }
+  // if game is starting, hide player count required
+  if (event.data.includes('Game starts in')) {
+    $('#desc').hide();
+  } else {
+    $('#desc').show();
+  }
   // show current message as text
   $("#status").text(function(){
     return event.data
