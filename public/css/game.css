@@ -10,6 +10,7 @@ td {
   width: 3vw;
   color: #fbf1c7;
   text-align: center;
+
 }
 
 #content {
@@ -20,7 +21,7 @@ td {
 #game-board {
   width: 100vw;
   overflow: hidden;
-
+  cursor: pointer;
 
 
   top: 0;
