@@ -20,6 +20,7 @@ type gameBoard struct {
 	tiles   [30][30]tile
 	players [][8]byte
 	id      [8]byte
+	// Boards need a tick offset to figure out when tiles should grow
 	tOffset int
 }
 
@@ -62,15 +63,22 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 
 // Create a map and clear the queued players
 func startGame() {
-	queuedPlayersLock.Lock()
+
+	// Create a map with a proper tick offset
 	gTickLock.RLock()
 	formMap(queuedPlayers, gTick)
 	gTickLock.RUnlock()
+
+	// Clear the player queue
+	queuedPlayersLock.Lock()
 	queuedPlayers = [][8]byte{}
-	fmt.Println("Starting game...")
+	queuedPlayersLock.Unlock()
+
+	// List # active games
 	lockGameBoards.RLock()
+	fmt.Println("Starting game...")
 	fmt.Println(len(games), "active game(s)")
 	fmt.Println()
 	lockGameBoards.RUnlock()
-	queuedPlayersLock.Unlock()
+
 }
