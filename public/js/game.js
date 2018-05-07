@@ -1,5 +1,7 @@
 var zoomratio = 1;
 
+const socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
+
 $(document).ready(() => {
   checkLogin();
   // SETUP
