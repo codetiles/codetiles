@@ -29,7 +29,7 @@ func main() {
 	http.HandleFunc("/api/v1/uploadcode", handleUploadCode)        // code.go
 	http.HandleFunc("/api/v1/ws/findgame", WSHandleWaitForGame)    // wait.go
 	http.HandleFunc("/api/v1/game/players", handleRetrievePlayers) // game.go
-	http.HandleFunc("/api/v1/ws/gameboard", WSHandleGameBoard) 		 // s-game.go
+	http.HandleFunc("/api/v1/ws/gameboard", WSHandleGameBoard)     // s-game.go
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }

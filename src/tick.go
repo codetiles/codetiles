@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"time"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
