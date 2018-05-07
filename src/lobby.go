@@ -13,15 +13,10 @@ var openws []*websocket.Conn
 var wwslock []*sync.Mutex
 var wslock sync.RWMutex
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
-
 // Create a websocket and send a user information about the game they are
 // waititng for
-func handleWaitForGame(w http.ResponseWriter, r *http.Request) {
-	ws, err := upgrader.Upgrade(w, r, nil)
+func WSHandleWaitForGame(w http.ResponseWriter, r *http.Request) {
+	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	defer ws.WriteMessage(websocket.CloseMessage, []byte{})
 	defer ws.Close()
 

@@ -130,5 +130,6 @@ func checkUserId(id [8]byte) (bool, bool, bool, string) {
 		}
 	}
 
+	// NOTE: This is the return order
 	return true, inGame, inQueue, disp
 }
