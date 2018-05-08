@@ -8,11 +8,15 @@ import (
 )
 
 func main() {
+	// Change this to change the port that the server runs on.
 	PORT := "8080"
+
 	fmt.Println("Starting codetiles server on port " + PORT)
 
 	users = make(map[[8]byte]user)
 
+	// Create the different ticks and start some of the
+	// functions that are self-calling.
 	searchtick = make(chan int)
 	autosearchtick = make(chan int)
 	go performSearchTick()
