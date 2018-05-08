@@ -91,6 +91,15 @@ func gameTick() {
 	gTickLock.Lock()
 	gTick++
 	gTickLock.Unlock()
+
+	gameLock.RLock()
+	for i, j := range(pGameWS) {
+		pGameLocks[i].Lock()
+		j.SetWriteDeadline(time.Now().Add(time.Duration(time.Millisecond * 200)))
+		j.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(pGameWSid[i])))
+		pGameLocks[i].Unlock()
+	}
+	gameLock.RUnlock()
 	time.Sleep(time.Second)
 	gameTick()
 }

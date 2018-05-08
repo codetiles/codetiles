@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -64,6 +65,7 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 	pGameWS = append(pGameWS, ws)
 	pGameLocks = append(pGameLocks, wrL)
 	pGameTickN = append(pGameTickN, tickN)
+	pGameWSid = append(pGameWSid, uid)
 	fmt.Println(pGameWS, pGameLocks, tickN)
 	gameLock.Unlock()
 
@@ -97,5 +99,8 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 
 		gameLock.Unlock()
 	}()
+
+
+	time.Sleep(time.Second * 100)
 
 }
