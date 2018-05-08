@@ -20,10 +20,14 @@ type tile struct {
 type gameBoard struct {
 	tiles   [30][30]tile
 	players [][8]byte
+	colors  []string
 	id      [8]byte
 	// Boards need a tick offset to figure out when tiles should grow
 	tOffset int
 }
+
+// Possible constant colors
+var colors []string = []string{"b", "r", "g", "y"}
 
 func formMap(players [][8]byte, tOffset int) [8]byte {
 	// Create a sample tile
@@ -43,8 +47,31 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 	// Create the map
 	var newMap gameBoard
 
-	newMap.tiles = tiles
 	newMap.players = players
+
+	// Assign each player to a color
+	for i := range(players) {
+		newMap.colors = append(newMap.colors, colors[i])
+	}
+
+	// Place a tile randomly on the map for that player's color
+	// (verify another player main tile isn't there too)
+	for _, j := range(newMap.colors) {
+		for {
+			var b [2]byte
+			rand.Read(b[:])
+			rTileX := b[0] % 30
+			rTileY := b[1] % 30
+		 	if tiles[rTileX][rTileY].owner == "/" {
+				tiles[rTileX][rTileY].owner = j
+				tiles[rTileX][rTileY].value = 2
+				break
+			}
+		}
+	}
+
+	newMap.tiles = tiles
+
 
 	// Make all users on the map be registered as being in a game
 	usersArrayLock.Lock()

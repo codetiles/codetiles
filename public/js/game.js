@@ -93,7 +93,11 @@ function loadBoard(boardString) {
       switch (color) {
         case "b":
           el.removeClass();
-          el.addClass('blue')
+          el.addClass('blue');
+          break;
+        case "r":
+          el.removeClass();
+          el.addClass('red');
           break;
         default:
           el.removeClass();

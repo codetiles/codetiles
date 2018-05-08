@@ -21,8 +21,8 @@ var pGameTickN []*int
 // Lock for above arrays
 var gameLock sync.RWMutex
 
-// Websocket handler to send the game board to a user. Requires heavy use of
-// tick's for updating game board correctly.
+// WSHandleGameBoard is a Websocket handler to send the game board to a user.
+// It requires heavy use of tick's for updating game board correctly.
 func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	defer ws.Close()
