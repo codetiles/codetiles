@@ -50,19 +50,23 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 	newMap.players = players
 
 	// Assign each player to a color
-	for i := range(players) {
+	for i := range players {
+		// Limit it to 2 players
+		if i > 2 {
+			break
+		}
 		newMap.colors = append(newMap.colors, colors[i])
 	}
 
 	// Place a tile randomly on the map for that player's color
 	// (verify another player main tile isn't there too)
-	for _, j := range(newMap.colors) {
+	for _, j := range newMap.colors {
 		for {
 			var b [2]byte
 			rand.Read(b[:])
 			rTileX := b[0] % 30
 			rTileY := b[1] % 30
-		 	if tiles[rTileX][rTileY].owner == "/" {
+			if tiles[rTileX][rTileY].owner == "/" {
 				tiles[rTileX][rTileY].owner = j
 				tiles[rTileX][rTileY].value = 2
 				break
@@ -71,7 +75,6 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 	}
 
 	newMap.tiles = tiles
-
 
 	// Make all users on the map be registered as being in a game
 	usersArrayLock.Lock()
