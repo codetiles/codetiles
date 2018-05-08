@@ -46,15 +46,15 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 	exists, inGame, _, _ := checkUserId(uid)
 	if !exists {
 		ws.WriteMessage(websocket.TextMessage, []byte("User does not exist"))
-    return 
+		return
 	}
 
 	if !inGame {
 		ws.WriteMessage(websocket.TextMessage, []byte("User is not in a game"))
-    return
+		return
 	}
 
-  ws.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(uid)))
+	ws.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(uid)))
 
 	wrL := new(sync.Mutex)
 	tickN := new(int)
