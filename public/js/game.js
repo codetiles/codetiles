@@ -1,6 +1,7 @@
 var zoomratio = 1;
 
-const socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
+
+
 
 $(document).ready(() => {
   checkLogin();
@@ -63,6 +64,17 @@ $(document).ready(() => {
 
   $("#publish").on("click", function () {
     submitCode();
+  });
+
+  // Websocket stuffs
+  const socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
+
+  socket.addEventListener('message', function (event) {
+    console.log(event.data);
+  });
+
+  socket.addEventListener('open', function (event) {
+    socket.send(localStorage.getItem('user_id'));
   });
 });
 
