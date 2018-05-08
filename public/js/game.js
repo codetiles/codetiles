@@ -68,12 +68,25 @@ $(document).ready(() => {
 
   socket.addEventListener('message', function (event) {
     console.log(event.data);
+    loadBoard(event.data);
   });
 
   socket.addEventListener('open', function (event) {
     socket.send(localStorage.getItem('user_id'));
   });
 });
+
+function loadBoard(boardString) {
+  let lines = boardString.split(`\n`);
+  let tiles = [];
+  for (let i=0;i<lines.length;i++) {
+    for (let j=0;j<lines[i].length;j+=3) {
+      let number = lines[i].substring(j+1, j+3);
+      let color = lines[i][j];
+      $('#game-board:nth-child('+string(i)+'):nth-child('+string(j/3)+')').text(number);
+    }
+  }
+}
 
 function submitCode() {
   let submitted_code = $('textarea#code').val();
