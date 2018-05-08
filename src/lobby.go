@@ -101,7 +101,7 @@ func WSHandleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	}
 	mut.Unlock()
 
-	// To prevent connections being closed, recieve a message from the client every now and then
+	// To prevent connections being closed, receive a message from the client every now and then
 	go func() {
 		for {
 			ws.SetReadDeadline(time.Now().Add(time.Duration(time.Second * 5)))

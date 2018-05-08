@@ -83,7 +83,21 @@ function loadBoard(boardString) {
     for (let j=0;j<lines[i].length;j+=3) {
       let number = lines[i].substring(j+1, j+3);
       let color = lines[i][j];
-      $('#game-board:nth-child('+string(i)+'):nth-child('+string(j/3)+')').text(number);
+      let el = $('#game-board tr:eq('+String(i)+') td:eq('+String(j/3)+')')
+      if (number != "00") {
+        el.text(number);
+      }
+      else {
+        el.html("&nbsp")
+      }
+      switch (color) {
+        case "b":
+          el.removeClass();
+          el.addClass('blue')
+          break;
+        default:
+          el.removeClass();
+      }
     }
   }
 }
