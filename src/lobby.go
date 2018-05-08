@@ -13,8 +13,8 @@ var openws []*websocket.Conn
 var wwslock []*sync.Mutex
 var wslock sync.RWMutex
 
-// Create a websocket and send a user information about the game they are
-// waititng for
+// WSHandleWaitForGame creates a websocket and send a user information about
+// the game they are waititng for
 func WSHandleWaitForGame(w http.ResponseWriter, r *http.Request) {
 	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	defer ws.WriteMessage(websocket.CloseMessage, []byte{})
