@@ -1,7 +1,6 @@
 var zoomratio = 1;
 
 $(document).ready(() => {
-  checkLogin();
   // SETUP
   // scroll wheel zoomin
   $('#content').on('mousewheel', function(event) {
