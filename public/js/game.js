@@ -67,8 +67,11 @@ $(document).ready(() => {
   const socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
 
   socket.addEventListener('message', function (event) {
-    console.log(event.data);
-    loadBoard(event.data);
+    if (event.data === "User is not in a game") {
+      window.location.href = '/';
+    } else {
+      loadBoard(event.data);
+    }
   });
 
   socket.addEventListener('open', function (event) {
