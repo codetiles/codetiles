@@ -67,7 +67,7 @@ $(document).ready(() => {
   const socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
 
   socket.addEventListener('message', function (event) {
-    if (event.data === "User is not in a game") {
+    if (event.data === "User is not in a game" || event.data === "User does not exist") {
       window.location.href = '/';
     } else {
       loadBoard(event.data);
