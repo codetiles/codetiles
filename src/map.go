@@ -10,6 +10,9 @@ import (
 
 var lockGameBoards sync.RWMutex
 var games []gameBoard
+// Stores the last tick of the board for comparison
+var lockLastTickBoards sync.RWMutex
+var lastTickBoards [][30][30]tile
 
 type tile struct {
 	tileType string
@@ -43,6 +46,9 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 			tiles[i][j] = emptyTile
 		}
 	}
+
+	var emptyMap [30][30]tile
+	copy(emptyMap[:], tiles[:])
 
 	// Create the map
 	var newMap gameBoard
@@ -95,7 +101,12 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 	newMap.tOffset = tOffset
 
 	lockGameBoards.Lock()
+	lockLastTickBoards.Lock()
+
 	games = append(games, newMap)
+	lastTickBoards = append(lastTickBoards, emptyMap)
+
+	lockLastTickBoards.Unlock()
 	lockGameBoards.Unlock()
 
 	return newMap.id
@@ -130,6 +141,7 @@ func stringifyBoard(uid [8]byte) string {
 
 	// Populate the tilemap with the raw data from the map
 	lockGameBoards.RLock()
+	defer lockGameBoards.RUnlock()
 	for _, board := range games {
 		for _, player := range board.players {
 			if player == uid {
@@ -137,7 +149,6 @@ func stringifyBoard(uid [8]byte) string {
 			}
 		}
 	}
-	lockGameBoards.RUnlock()
 
 	if tilemap == [30][30]tile{} {
 		return "User not in game"
@@ -149,14 +160,59 @@ func stringifyBoard(uid [8]byte) string {
 	for _, cols := range tilemap {
 		for _, tile := range cols {
 			encodedMap += tile.owner
-			sVal := strconv.Itoa(tile.value)
-			if len(sVal) == 1 {
-				sVal = "0" + sVal
-			}
-			encodedMap += sVal
+			encodedMap += twoDigitITOA(tile.value)
 		}
 		encodedMap += "\n"
 	}
 
 	return encodedMap
+}
+
+func twoDigitITOA(val int) string {
+	ret := strconv.Itoa(val)
+	if len(ret) == 1 {
+		ret = "0" + ret
+	}
+
+	return ret
+}
+
+func stringifyBoardDifference(uid [8]byte) string {
+	var tilemap [30][30]tile
+	var lTilemap [30][30]tile
+
+	// Populate the tilemap with the raw data from the map
+	lockGameBoards.RLock()
+	lockLastTickBoards.RLock()
+	defer lockLastTickBoards.RUnlock()
+	defer lockGameBoards.RUnlock()
+	for i, board := range games {
+		for _, player := range board.players {
+			if player == uid {
+				tilemap = board.tiles
+				lTilemap = lastTickBoards[i]
+			}
+		}
+	}
+
+	if tilemap == [30][30]tile{} {
+		return "User not in game"
+	}
+
+	var returnString string
+
+	for i := range tilemap {
+		for j := range tilemap[i] {
+			if tilemap[i][j] != lTilemap[i][j] {
+				tile := tilemap[i][j]
+				returnString += twoDigitITOA(i)
+				returnString += twoDigitITOA(j)
+				returnString += tile.owner
+				returnString += twoDigitITOA(tile.value)
+			}
+
+		}
+	}
+
+	return returnString
 }

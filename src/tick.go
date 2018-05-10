@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
+	"crypto/rand"
 
 	"github.com/gorilla/websocket"
 )
@@ -93,13 +94,27 @@ func gameTick() {
 	gTickLock.Unlock()
 
 	gameLock.RLock()
-	for i, j := range(pGameWS) {
+	for i, j := range pGameWS {
 		pGameLocks[i].Lock()
 		j.SetWriteDeadline(time.Now().Add(time.Duration(time.Millisecond * 200)))
-		j.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(pGameWSid[i])))
+		j.WriteMessage(websocket.TextMessage, []byte("d" + stringifyBoardDifference(pGameWSid[i])))
 		pGameLocks[i].Unlock()
 	}
+
 	gameLock.RUnlock()
+
+	lockGameBoards.RLock()
+	lockLastTickBoards.Lock()
+	for i := range games {
+		copy(lastTickBoards[i][:], games[i].tiles[:])
+		var rando [2]byte
+		rand.Read(rando[:])
+		games[i].tiles[rando[0] % 30][rando[1] % 30] = tile{"n", 5, "b"}
+	}
+	lockLastTickBoards.Unlock()
+
+	lockGameBoards.RUnlock()
+
 	time.Sleep(time.Second)
 	gameTick()
 }
