@@ -117,4 +117,7 @@ function startGame() {
   $(window).on('beforeunload', function(){
       socket.close();
   });
+
+  $("#logged_in_text").hide();
+  $("#login_widget").hide();
 }
