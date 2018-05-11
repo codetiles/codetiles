@@ -47,7 +47,7 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove need to append .html to URL
-	if filename == "/game" || filename == "/unsupported" || filename == "/lobby" {
+	if filename == "/game" || filename == "/unsupported" {
 		filename += ".html"
 	}
 
