@@ -1,19 +1,45 @@
+body {
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+p {
+  margin: 0;
+  overflow: hidden;
+
+}
+
 .error {
   color: red;
 }
 
-.container {
+.info {
   display: flex;
+  width: 65vw;
+  height: 100vh;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
 }
 
-.info {
-  width: 50vw;
-  flex: 1;
+.info > div {
+  margin-bottom: 5vh;
+}
+
+.title {
+  font-size: 50px;
 }
 
 .code {
-  width: 50vw;
-  flex: 1;
+  padding: 50px;
+  width: 35vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #code_textarea {

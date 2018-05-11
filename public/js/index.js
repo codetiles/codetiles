@@ -72,5 +72,49 @@ function logout() {
 }
 
 function startGame() {
-  window.location.href = '/lobby';
+  $("#code_textarea").text("")
+  $("#code_textarea").animate({
+    "width": "0vw",
+    "padding" : 0,
+    "margin" : 0
+  }, 300);
+  $("#code").animate({
+    "width": "100vw",
+  });
+
+  $(".slogan").text("Game will start when 2 players are in queue.");
+
+  const socket = new WebSocket('ws://localhost:8080/api/v1/ws/findgame');
+
+  socket.addEventListener('message', function (event) {
+    // user isn't logged in
+    if (event.data == "User id does not exist") {
+      $(".slogan").html(`<a href='/'>Back to home page</a>`);
+    }
+    // game has started, redirect
+    if (event.data == "...") {
+      window.location.href="/game"
+    }
+    // if game is starting, hide player count required
+    if (event.data.includes('Game starts in')) {
+      $('.slogan').hide();
+    } else {
+      $('.slogan').show();
+    }
+    // show current message as text
+    $(".title").text(event.data);
+  });
+
+  socket.addEventListener('open', function (event) {
+    socket.send(localStorage.getItem('user_id'));
+  });
+
+  // keep connection alive
+  setInterval(function(){
+    socket.send("...")
+  }, 250);
+
+  $(window).on('beforeunload', function(){
+      socket.close();
+  });
 }

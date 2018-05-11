@@ -3,24 +3,26 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
     <link rel="stylesheet" href="css/index.css">
-    <title>welcome | codetiles</title>
+    <title>Welcome | Codetiles</title>
   </head>
   <body>
-    <div class="container">
-      <div class="code">
-        <textarea id="code_textarea" rows="20" cols="50">// nothing here yet</textarea>
-      </div>
-      <div class="info" id="code">
+    <p id="code_textarea" class="code" contenteditable="true">// Your code here</p>
+    <div class="info" id="code">
+      <div>
         <div class="title">
-          codetiles
+          Codetiles
         </div>
         <div class="slogan">
           Write code. Capture enemy factories.
         </div>
+        <br>
+        <br>
         <div id="logged_in_text"></div>
         <div id="login_widget">
           <input type="text" placeholder="name" id="displayname"></input>
+          <br>
           <button type="submit" onClick="handleDisplayNameSubmission()">Play</button>
         </div>
       </div>
