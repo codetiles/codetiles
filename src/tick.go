@@ -1,11 +1,11 @@
 package main
 
 import (
+	"crypto/rand"
 	"fmt"
 	"strconv"
 	"sync"
 	"time"
-	"crypto/rand"
 
 	"github.com/gorilla/websocket"
 )
@@ -97,7 +97,7 @@ func gameTick() {
 	for i, j := range pGameWS {
 		pGameLocks[i].Lock()
 		j.SetWriteDeadline(time.Now().Add(time.Duration(time.Millisecond * 200)))
-		j.WriteMessage(websocket.TextMessage, []byte("d" + stringifyBoardDifference(pGameWSid[i])))
+		j.WriteMessage(websocket.TextMessage, []byte("d"+stringifyBoardDifference(pGameWSid[i])))
 		pGameLocks[i].Unlock()
 	}
 
@@ -109,7 +109,7 @@ func gameTick() {
 		copy(lastTickBoards[i][:], games[i].tiles[:])
 		var rando [2]byte
 		rand.Read(rando[:])
-		games[i].tiles[rando[0] % 30][rando[1] % 30] = tile{"n", 5, "b"}
+		games[i].tiles[rando[0]%30][rando[1]%30] = tile{"n", 5, "b"}
 	}
 	lockLastTickBoards.Unlock()
 

@@ -135,5 +135,5 @@ func checkUserId(id [8]byte) (bool, bool, bool, string) {
 }
 
 func leaveUser(uid [8]byte) {
-	
+
 }

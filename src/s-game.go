@@ -121,5 +121,4 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(time.Millisecond * 250)
 	}
 
-
 }

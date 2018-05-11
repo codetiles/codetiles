@@ -10,6 +10,7 @@ import (
 
 var lockGameBoards sync.RWMutex
 var games []gameBoard
+
 // Stores the last tick of the board for comparison
 var lockLastTickBoards sync.RWMutex
 var lastTickBoards [][30][30]tile
