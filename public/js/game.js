@@ -1,4 +1,5 @@
 var zoomratio = 1;
+var socket;
 
 $(document).ready(() => {
   // SETUP
@@ -48,12 +49,14 @@ $(document).ready(() => {
   });
 
   // Websocket stuffs
-  const socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
+  socket = new WebSocket('ws://localhost:8080/api/v1/ws/gameboard');
 
   socket.addEventListener('message', function (event) {
     console.log(event.data);
     if (event.data === "User is not in a game" || event.data === "User does not exist") {
       window.location.href = '/';
+    } else if (event.data == "--pong--") {
+      return
     } else {
       determineLoad(event.data);
     }
@@ -168,3 +171,7 @@ function zoomout() {
   $("#game-board").css("height", document_width * zoomratio)
   $("#game-board").css("font-size", String(16 * zoomratio) + "px");
 }
+
+setInterval(function(){
+  socket.send("~ping~")
+}, 500);
