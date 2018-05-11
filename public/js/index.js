@@ -57,6 +57,9 @@ function auth() {
       $('#login_widget').show();
       location.reload();
     } else {
+      if (data.InGame = "true") {
+        window.location.href = '/game';
+      }
       user_id = localStorage.getItem('user_id');
       displayname = data.DisplayName;
       $("#logged_in_text").html(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a><br><button type="submit" onClick="startGame()">Start a Game</button>`);
