@@ -62,16 +62,6 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 
 	ws.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(uid)))
 
-	// Add both lock and websocket to the game-pointer arrays
-	gameLock.Lock()
-	pGameWS = append(pGameWS, ws)
-	pGameLocks = append(pGameLocks, wrL)
-	pGameTickN = append(pGameTickN, tickN)
-	pGameWSid = append(pGameWSid, uid)
-	fmt.Println(pGameWS, pGameLocks, tickN)
-	gameLock.Unlock()
-
-
 	// When function returns remove both lock and websocket pointers
 	defer func() {
 		gameLock.Lock()
@@ -79,7 +69,7 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		var wsArr []*websocket.Conn
 		for _, j := range pGameWS {
 			if j != ws {
-				wsArr = append(wsArr, ws)
+				wsArr = append(wsArr, j)
 			}
 		}
 		pGameWS = wsArr
@@ -87,7 +77,7 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		var lArr []*sync.Mutex
 		for _, j := range pGameLocks {
 			if j != wrL {
-				lArr = append(lArr, wrL)
+				lArr = append(lArr, j)
 			}
 		}
 		pGameLocks = lArr
@@ -103,7 +93,34 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		gameLock.Unlock()
 	}()
 
+	// Add both lock and websocket to the game-pointer arrays
+	gameLock.Lock()
+	pGameWS = append(pGameWS, ws)
+	pGameLocks = append(pGameLocks, wrL)
+	pGameTickN = append(pGameTickN, tickN)
+	pGameWSid = append(pGameWSid, uid)
+	fmt.Println(len(pGameWS), "game socket(s) open.")
+	gameLock.Unlock()
 
-	time.Sleep(time.Second * 100)
+	go func() {
+		for {
+			ws.SetWriteDeadline(time.Now().Add(time.Duration(time.Second * 2)))
+			_, m, err := ws.ReadMessage()
+			if err != nil {
+				return
+			}
+			wrL.Lock()
+			if string(m) != getTickStr() {
+				ws.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(uid)))
+			} else {
+				ws.WriteMessage(websocket.TextMessage, []byte("--pong--"))
+			}
+
+			wrL.Unlock()
+
+		}
+	}()
+
+	time.Sleep(time.Second * 10)
 
 }

@@ -118,3 +118,10 @@ func gameTick() {
 	time.Sleep(time.Second)
 	gameTick()
 }
+
+func getTickStr() string {
+	gTickLock.RLock()
+	defer gTickLock.RUnlock()
+
+	return strconv.Itoa(gTick)
+}
