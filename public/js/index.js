@@ -89,7 +89,7 @@ function startGame() {
   socket.addEventListener('message', function (event) {
     // user isn't logged in
     if (event.data == "User id does not exist") {
-      $(".slogan").html(`<a href='/'>Back to home page</a>`);
+      $(".slogan").html(`<a href='/'>back to home page</a>`);
     }
     // game has started, redirect
     if (event.data == "...") {
