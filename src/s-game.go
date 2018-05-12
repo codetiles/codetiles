@@ -95,7 +95,6 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		gameLock.Unlock()
 	}()
 
-
 	// Add both lock and websocket to the game-pointer arrays
 	gameLock.Lock()
 	pGameWS = append(pGameWS, ws)
