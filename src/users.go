@@ -134,6 +134,25 @@ func checkUserId(id [8]byte) (bool, bool, bool, string) {
 	return true, inGame, inQueue, disp
 }
 
+// Remove a player from a game
 func leaveUser(uid [8]byte) {
+	lockGameBoards.Lock()
+	for _, j := range games {
+		for i, id := range j.players {
+			if id == uid {
+				j.players = append(j.players[:i], j.players[i+1:]...)
+				j.colors = append(j.colors[:i], j.colors[i+1:]...)
+			}
+		}
+	}
+	lockGameBoards.Unlock()
 
+	usersArrayLock.Lock()
+	for i, j := range users {
+		if j.id == uid {
+			j.inGame = false
+			users[i] = j
+		}
+	}
+	usersArrayLock.Unlock()
 }

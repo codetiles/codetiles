@@ -55,6 +55,8 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	defer leaveUser(uid)
+
 	ws.WriteMessage(websocket.TextMessage, []byte(stringifyBoard(uid)))
 
 	wrL := new(sync.Mutex)
@@ -93,7 +95,6 @@ func WSHandleGameBoard(w http.ResponseWriter, r *http.Request) {
 		gameLock.Unlock()
 	}()
 
-	defer leaveUser(uid)
 
 	// Add both lock and websocket to the game-pointer arrays
 	gameLock.Lock()
