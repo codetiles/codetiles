@@ -142,6 +142,7 @@ func leaveUser(uid [8]byte) {
 			if id == uid {
 				j.players = append(j.players[:i], j.players[i+1:]...)
 				j.colors = append(j.colors[:i], j.colors[i+1:]...)
+				break
 			}
 		}
 	}
@@ -152,6 +153,7 @@ func leaveUser(uid [8]byte) {
 		if j.id == uid {
 			j.inGame = false
 			users[i] = j
+			break
 		}
 	}
 	usersArrayLock.Unlock()
