@@ -83,7 +83,7 @@ function loadDifference(boardString) {
   for (let i = 0; i < boardString.length; i += 7) {
     let x = boardString.substring(i, i + 2);
     let y = boardString.substring(i + 2, i + 4);
-    let c = boardString[4]
+    let c = boardString[i + 4]
     let v = boardString.substring(i + 5, i + 7);
     let el = $("#game-board tr:eq(" + x + ") td:eq(" + y + ")")
     el.text(v)

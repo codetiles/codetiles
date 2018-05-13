@@ -76,6 +76,7 @@ func formMap(players [][8]byte, tOffset int) [8]byte {
 			if tiles[rTileX][rTileY].owner == "/" {
 				tiles[rTileX][rTileY].owner = j
 				tiles[rTileX][rTileY].value = 2
+				tiles[rTileX][rTileY].tileType = "c"
 				break
 			}
 		}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/rand"
 	"fmt"
 	"strconv"
 	"sync"
@@ -91,7 +90,6 @@ func checkCountdown() {
 func gameTick() {
 	gTickLock.Lock()
 	gTick++
-	gTickLock.Unlock()
 
 	gameLock.RLock()
 	for i, j := range pGameWS {
@@ -103,17 +101,37 @@ func gameTick() {
 
 	gameLock.RUnlock()
 
-	lockGameBoards.RLock()
 	lockLastTickBoards.Lock()
+
+	lockGameBoards.RLock()
+
 	for i := range games {
 		copy(lastTickBoards[i][:], games[i].tiles[:])
-		var rando [2]byte
-		rand.Read(rando[:])
-		games[i].tiles[rando[0]%30][rando[1]%30] = tile{"n", 5, "b"}
+
+		for indX, arr := range games[i].tiles {
+			for indY := range arr {
+				tile := arr[indY]
+				if tile.owner != "/" {
+					if tile.tileType == "c" {
+						tile.value++
+						games[i].tiles[indX][indY] = tile
+					}
+					if tile.tileType == "n" && gTick % 10 == 0 {
+						tile.value++
+						games[i].tiles[indX][indY] = tile
+					}
+				}
+			}
+		}
+
 	}
+
 	lockLastTickBoards.Unlock()
 
 	lockGameBoards.RUnlock()
+
+
+	gTickLock.Unlock()
 
 	time.Sleep(time.Second)
 	gameTick()
