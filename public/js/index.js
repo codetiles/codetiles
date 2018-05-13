@@ -7,9 +7,15 @@ $(function() {
   if(!window.localStorage) window.location.href = '/unsupported';
 
   // if enter key is pressed (while displayname is focused), submit data
-  $("#displayname").on('keyup', function (e) {
+  $("#displayname").on('keydown', function (e) {
     if (e.keyCode == 13) {
       handleDisplayNameSubmission();
+    }
+  });
+
+  $("#code_textarea").on("keydown", function (e) {
+    if (e.keyCode == 9) {
+	    e.preventDefault();
     }
   });
 
