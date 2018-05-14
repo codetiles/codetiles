@@ -15,8 +15,9 @@ $(function() {
 
   $("#code_textarea").on("keydown", function (e) {
     if (e.keyCode == 9) {
-	    e.preventDefault();
-    }
+    
+	e.preventDefault();
+  }
   });
 
   if(localStorage.getItem('user_id') != null) {

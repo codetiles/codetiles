@@ -3,10 +3,29 @@ var socket;
 
 $(document).ready(() => {
   // SETUP
-  // scroll wheel zoomin
+  // Focus on the code editor on page load
+	$("#editor").focus();
+	// scroll wheel zoomin
   $('#content').on('mousewheel', function(event) {
     event.deltaY === 1 ? zoomin() : zoomout();
   });
+  $("#editor").on("keydown", function (e) {
+	if (e.keyCode == 9) {
+    e.preventDefault();
+    var start = this.selectionStart;
+    var end = this.selectionEnd;
+
+    // set textarea value to: text before caret + tab + text after caret
+    $(this).val($(this).val().substring(0, start)
+                + "\t"
+                + $(this).val().substring(end));
+
+    // put caret at right position again
+    this.selectionStart =
+    this.selectionEnd = start + 1;
+  }
+    }
+  );
   // set game size properly on window resizing
   $(document).resize(() => {
     proper_size();
