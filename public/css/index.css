@@ -1,9 +1,27 @@
 body {
-  display: flex;
-  height: 100vh;
   margin: 0;
   padding: 0;
+}
+
+.page1 {
+  height: 100vh;
+  display: flex;
   overflow: hidden;
+}
+
+.lang-spec {
+  height: 95vh;
+  padding-top: 5vh;
+  overflow: hidden;
+  font-family: 'Oswald', sans-serif;
+}
+
+.lang-spec > * {
+  margin: 4px 25px;
+}
+
+code {
+  font-size: 20px;
 }
 
 p {
@@ -33,6 +51,7 @@ p {
 
 .title {
   font-size: 50px;
+  text-align: center;
 }
 
 .code {

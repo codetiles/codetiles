@@ -3,34 +3,62 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Inconsolata|Oswald" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata|Oswald" rel="stylesheet">
     <link rel="stylesheet" href="css/index.css">
     <title>welcome | codetiles</title>
   </head>
   <body>
-	  <div id="test">
-    <p id="code_textarea" class="code" contenteditable="true">// your code here</p>
-    <!--<button type=>Wassup</button>-->
-	  </div>
-    <div class="info" id="code">
-      <div>
-        <div class="title">
-          codetiles
-        </div>
-        <div class="slogan">
-          Write code, capture enemy factories.
-        </div>
-        <br>
-        <br>
-        <div id="logged_in_text"></div>
-        <div id="login_widget">
-          <input type="text" placeholder="name" id="displayname"></input>
+    <div class="page1">
+      <div id="test">
+      <p id="code_textarea" class="code" contenteditable="true">
+        Move("right", 1, "value")
+      </p>
+      <!--<button type=>Wassup</button>-->
+  	  </div>
+      <div class="info" id="code">
+        <div>
+          <div class="title">
+            codetiles
+          </div>
+          <div class="slogan">
+            Write code, capture enemy factories.
+          </div>
           <br>
-          <button type="submit" onClick="handleDisplayNameSubmission()">Play</button>
+          <br>
+          <div id="logged_in_text"></div>
+          <div id="login_widget">
+            <input type="text" placeholder="name" id="displayname"></input>
+            <br>
+            <button type="submit" onClick="handleDisplayNameSubmission()">Play</button>
+          </div>
         </div>
       </div>
     </div>
 
+    <div class="lang-spec">
+      <p class="title">Language Specifications</p>
+      <br>
+      <div class="features">
+        <p>
+          <code>Move(direction, amount, method)</code>
+          <br> Example: <code>Move("up", 10, "value")</code>
+          <br> <br>
+          Moves pieces from the tile. Direction must be either "up" "down" "left"
+          or "right". Amount is an integer. Method must be "allbut" or "value" and
+          determines the amount of pieces to be moved ("allbut" leaves behind
+          [amount] pieces, while "value" moves [amount] pieces).
+          <br>
+        </p>
+        <br>
+        <p>
+          <code>Seek(type).val</code>
+          <br> Example: <code>Seek("enemy").x</code>
+          <br> <br>
+          Seeks for a specific tile. type can be "enemy" "unexplored" or "either"
+          which determines what it will seek. "val" can be x, y, value, or type.
+        </p>
+      </div>
+    </div>
     <!-- js tags (in body for faster loading) -->
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/index.js" charset="utf-8"></script>
