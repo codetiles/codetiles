@@ -31,6 +31,7 @@ func createUser(un string) [8]byte {
 	newUser.name = un
 	newUser.exp = 0
 	newUser.inGame = false
+	newUser.code = "Move(\"right\", 1, \"value\") "
 
 	// Generate a secure random byte array then convert to base64.
 	var randomByteArray [6]byte

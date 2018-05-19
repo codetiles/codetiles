@@ -92,6 +92,23 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, string(rj))
 }
 
+// Handle a person retrieving their code
+func handleDownloadCode(w http.ResponseWriter, r *http.Request) {
+	id := r.Header.Get("id")
+	var uid [8]byte
+	copy(uid[:], []byte(id))
+
+	e, _, _, _ := checkUserId(uid)
+	if !e {
+		io.WriteString(w, "User does not exist")
+		return
+	}
+
+	usersArrayLock.RLock()
+	io.WriteString(w, users[uid].code)
+	usersArrayLock.RUnlock()
+}
+
 // Fuction for verifing code (confirming validity)
 func verifyCode(code string) (bool, string) {
 	return true, "None"
