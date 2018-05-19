@@ -78,6 +78,7 @@ func handleUploadCode(w http.ResponseWriter, r *http.Request) {
 	usersArrayLock.Lock()
 	user := users[uid]
 	user.code = rawCode
+	users[uid] = user
 	usersArrayLock.Unlock()
 
 	rj, err := json.Marshal(map[string]string{

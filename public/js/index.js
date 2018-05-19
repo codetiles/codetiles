@@ -15,7 +15,7 @@ $(function() {
 
   $("#code_textarea").on("keydown", function (e) {
     if (e.keyCode == 9) {
-    
+
 	e.preventDefault();
   }
   });
@@ -67,6 +67,17 @@ function auth() {
       user_id = localStorage.getItem('user_id');
       displayname = data.DisplayName;
       $("#logged_in_text").html(`Logged in as `+displayname+`, <a href="" onclick="logout();">logout</a><br><button type="submit" onClick="startGame()">Start a Game</button>`);
+      $.ajax({
+        url: "/api/v1/downloadcode",
+        type: "GET",
+        success: function(data){
+          $("#code_textarea").text(data)
+        },
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("id", localStorage.getItem("user_id"));
+        }
+      });
+
     }
   })
 }
@@ -79,6 +90,11 @@ function logout() {
 }
 
 function startGame() {
+  var code = $("#code_textarea").text();
+  $.post("api/v1/uploadcode",
+  `{"id": "` + localStorage.getItem("user_id") + `",
+  "code": "` + code.replace(/"/g, '\\"') + `"}`, "json");
+
   $("#code_textarea").text("")
   $("#code_textarea").animate({
     "width": "0vw",
