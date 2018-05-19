@@ -116,7 +116,7 @@ func gameTick() {
 						tile.value++
 						games[i].tiles[indX][indY] = tile
 					}
-					if tile.tileType == "n" && gTick % 10 == 0 {
+					if tile.tileType == "n" && gTick%10 == 0 {
 						tile.value++
 						games[i].tiles[indX][indY] = tile
 					}
@@ -129,7 +129,6 @@ func gameTick() {
 	lockLastTickBoards.Unlock()
 
 	lockGameBoards.RUnlock()
-
 
 	gTickLock.Unlock()
 
