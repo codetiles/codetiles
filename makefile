@@ -11,7 +11,7 @@ windows: depends
 	@go run src/main.go src/map.go src/game.go src/users.go src/lobby.go src/code.go src/misc.go src/tick.go
 depends:
 	@go get github.com/gorilla/websocket
-gofmt:
+gofmt: depends
 	@echo "Running gofmt on all code"
 	gofmt -w -s src/
 	@echo "Testing... "
